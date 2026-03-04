@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0f1117"/>
+  <rect x="1" y="1" width="1198" height="628" rx="12" stroke="#5d707f" stroke-opacity="0.4" fill="none"/>
+  <text x="600" y="280" font-family="system-ui, 'JetBrains Mono', monospace" font-size="48" font-weight="600" fill="#ecebf3" text-anchor="middle">Usama Shafique</text>
+  <text x="600" y="340" font-family="system-ui, 'JetBrains Mono', monospace" font-size="24" fill="#b5c1d2" text-anchor="middle">Backend &amp; AI-Integrated Software Engineer</text>
+  <rect x="450" y="400" width="300" height="56" rx="12" fill="#f97316"/>
+  <text x="600" y="436" font-family="system-ui, 'JetBrains Mono', monospace" font-size="18" font-weight="600" fill="white" text-anchor="middle">usamacodes.space</text>
+  <circle cx="600" cy="520" r="4" fill="#f97316" opacity="0.8"/>
+</svg>

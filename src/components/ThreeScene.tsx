@@ -1,0 +1,23 @@
+import React from 'react';
+
+/**
+ * Animated gradient mesh background.
+ * Pure CSS - no Three.js. Inspired by Linear, Vercel, Stripe.
+ */
+export const ThreeScene: React.FC = () => {
+  return (
+    <div className="fixed inset-0 overflow-hidden z-0 pointer-events-none" aria-hidden>
+      <div className="absolute inset-0 bg-[var(--brand-bg)]" />
+      <div className="absolute -top-[40%] -right-[20%] w-[80%] aspect-square rounded-full bg-[#f97316]/[0.08] blur-[100px] animate-blob" />
+      <div className="absolute -bottom-[30%] -left-[10%] w-[60%] aspect-square rounded-full bg-[#5d707f]/[0.06] blur-[80px] animate-blob animation-delay-2000" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] aspect-square rounded-full bg-[#f97316]/[0.04] blur-[120px] animate-blob animation-delay-4000" />
+      <div
+        className="absolute inset-0 opacity-[0.015]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #ecebf3 1px, transparent 0)`,
+          backgroundSize: '40px 40px',
+        }}
+      />
+    </div>
+  );
+};

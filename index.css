@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Brand palette from palette.svg - linkedin.com/in/usamacodes-space */
+:root, [data-theme="dark"] {
+  --brand-bg: #0f1117;
+  --brand-slate: #5d707f;
+  --brand-slate-light: #b5c1d2;
+  --brand-accent: #f97316;
+  --brand-light: #ecebf3;
+}
+
+/* Light theme: --brand-slate-light (#4a5568) on --brand-bg (#f4f6f9) meets WCAG AA contrast for normal text */
+[data-theme="light"] {
+  --brand-bg: #f4f6f9;
+  --brand-slate: #6b7c8d;
+  --brand-slate-light: #4a5568;
+  --brand-accent: #ea580c;
+  --brand-light: #1a1d24;
+}
+
+[data-theme="light"] body {
+  background: var(--brand-bg);
+  color: var(--brand-light);
+}
+
+/* Custom animations & polish */
+@layer utilities {
+  /* Keyframes */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-down {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes typing-dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(249, 115, 22, 0.3); }
+  }
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); transform: scale(1); }
+    50% { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); transform: scale(1.1); }
+  }
+
+  /* Animation classes */
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out forwards;
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+  }
+  .animate-fade-in-down {
+    animation: fade-in-down 0.5s ease-out forwards;
+  }
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out forwards;
+  }
+  .animate-slide-in-right {
+    animation: slide-in-right 0.4s ease-out forwards;
+  }
+  .animate-opacity-0 {
+    opacity: 0;
+  }
+  .animate-typing-dot {
+    animation: typing-dot 1.4s ease-in-out infinite;
+  }
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+  .animate-blob {
+    animation: blob 7s ease-in-out infinite;
+  }
+  .animation-delay-2000 { animation-delay: 2s; }
+  .animation-delay-4000 { animation-delay: 4s; }
+  .animate-live-pulse {
+    animation: live-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* Stagger delays */
+  .stagger-1 { animation-delay: 60ms; }
+  .stagger-2 { animation-delay: 120ms; }
+  .stagger-3 { animation-delay: 180ms; }
+  .stagger-4 { animation-delay: 240ms; }
+  .stagger-5 { animation-delay: 300ms; }
+  .stagger-6 { animation-delay: 360ms; }
+  .stagger-7 { animation-delay: 420ms; }
+  .stagger-8 { animation-delay: 480ms; }
+}
+
+/* Base polish */
+input, textarea, button {
+  transition: all 0.2s ease;
+}
+input:focus, textarea:focus, button:focus-visible {
+  outline: none;
+}
+input:focus, textarea:focus {
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4);
+}
+button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.5);
+}
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+a {
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile: improve touch scroll and tap targets */
+@media (max-width: 768px) {
+  .lenis-content {
+    -webkit-overflow-scrolling: touch;
+  }
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
