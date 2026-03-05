@@ -348,15 +348,13 @@ const App: React.FC = () => {
                 {EDUCATION.map((edu, idx) => (
                   <div key={idx} className="p-6 rounded-2xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-xl hover:shadow-[#f97316]/10 transition-all duration-300 group relative opacity-0 animate-fade-in-up [animation-fill-mode:forwards]" style={{ animationDelay: `${(idx + 1) * 80}ms` }}>
                     <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-3 mb-3">
-                      <h3 className="font-mono text-sm font-medium text-[#ecebf3] group-hover:text-[#f97316] transition-colors tracking-tight">{edu.degree}</h3>
-                      <div className="flex flex-col items-end gap-2 shrink-0">
-                        {edu.badge && (
-                          <span className="font-mono text-[10px] text-[#f97316] bg-[#f97316]/15 border border-[#f97316]/40 px-2.5 py-1 rounded-md whitespace-nowrap">
-                            {edu.badge}
-                          </span>
-                        )}
-                        <span className={`font-mono inline-block px-5 py-1.5 rounded-full border ${edu.badge ? 'text-[9px] text-[#f97316] bg-[#f97316]/20 border-[#f97316]/30' : 'text-[10px] text-[var(--brand-slate-light)] bg-[#5d707f]/20 border-[#5d707f]/40'}`}>{edu.institution}</span>
+                      <div className="flex flex-col gap-2">
+                        <h3 className="font-mono text-sm font-medium text-[#ecebf3] group-hover:text-[#f97316] transition-colors tracking-tight">{edu.degree}</h3>
+                        <span className={`font-mono inline-block w-fit px-5 py-1.5 rounded-full border ${edu.badge ? 'text-[9px] text-[#f97316] bg-[#f97316]/20 border-[#f97316]/30' : 'text-[10px] text-[var(--brand-slate-light)] bg-[#5d707f]/20 border-[#5d707f]/40'}`}>{edu.institution}</span>
                       </div>
+                      {edu.badge && (
+                        <span className="font-mono text-[10px] text-[#f97316] bg-[#f97316]/15 border border-[#f97316]/40 px-2.5 py-1 rounded-md whitespace-nowrap shrink-0">{edu.badge}</span>
+                      )}
                     </div>
                     <p className="font-mono text-[var(--brand-slate-light)] text-[11px]">{edu.period}</p>
                   </div>
