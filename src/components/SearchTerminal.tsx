@@ -26,7 +26,7 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full py-6 sm:py-8 px-2 sm:px-1">
+    <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full min-w-0 py-6 sm:py-8 px-2 sm:px-1 box-border">
       <div className="text-center mb-5 sm:mb-8 opacity-0 animate-fade-in-up [animation-fill-mode:forwards]">
         <h1 className="font-mono text-2xl sm:text-3xl font-medium text-[#ecebf3] mb-2 leading-tight">
           Ask Me Anything <Sparkles className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-[#f97316] ml-1" />
@@ -34,42 +34,42 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
         <p className="font-mono text-[var(--brand-slate-light)] text-sm sm:text-base px-1">Instant Answers About My Work, Projects, And Experience</p>
       </div>
 
-      <div className="relative group mb-6 sm:mb-10">
+      <div className="relative group mb-6 sm:mb-10 w-full max-w-full overflow-hidden">
         <div className="absolute -inset-0.5 bg-gradient-to-r from-[#f97316]/20 to-[#5d707f]/10 rounded-xl opacity-40 group-hover:opacity-70 transition-opacity"></div>
-        <div className="relative rounded-xl p-1.5 sm:p-1 shadow-2xl focus-within:border-[#f97316]/50 focus-within:shadow-[#f97316]/10 focus-within:shadow-2xl transition-all duration-300 bg-[var(--brand-bg)] border border-[#5d707f]/40">
-          <div className="flex flex-col">
+        <div className="relative rounded-xl p-2 sm:p-1 shadow-2xl focus-within:border-[#f97316]/50 focus-within:shadow-[#f97316]/10 focus-within:shadow-2xl transition-all duration-300 bg-[var(--brand-bg)] border border-[#5d707f]/40 overflow-hidden">
+          <div className="flex flex-col min-w-0">
             <input
               ref={inputRef}
               type="text"
               placeholder="Ask about my work, projects or experience..."
-              className="font-mono bg-transparent border-none outline-none px-4 py-3.5 sm:py-3 text-[16px] sm:text-[14px] w-full min-w-0 text-[#ecebf3] placeholder:text-[var(--brand-slate-light)] placeholder:truncate transition-colors touch-manipulation"
+              className="font-mono bg-transparent border-none outline-none px-4 py-3.5 sm:py-3 text-[16px] sm:text-[14px] w-full min-w-0 text-[#ecebf3] placeholder:text-[var(--brand-slate-light)] placeholder:truncate transition-colors touch-manipulation box-border"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               aria-label="Ask a question about Usama"
             />
-            <div className="flex items-center justify-between gap-2 sm:gap-1 px-3 sm:px-2 pb-2 pt-2 sm:pb-1.5 sm:pt-1 border-t border-[#5d707f]/40 mt-1">
-              <div className="flex items-center gap-1.5 bg-[#5d707f]/20 rounded-full px-2.5 py-1 border border-[#5d707f]/40 shrink-0">
-                <Zap className="w-2.5 h-2.5 text-[#f97316]" />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t border-[#5d707f]/40 mt-1 pt-3 sm:pt-2 pb-2 sm:pb-1.5 px-2 sm:px-2">
+              <div className="flex items-center gap-1.5 bg-[#5d707f]/20 rounded-full px-2.5 py-1 border border-[#5d707f]/40 w-fit shrink-0">
+                <Zap className="w-2.5 h-2.5 text-[#f97316] shrink-0" />
                 <span className="font-mono text-[10px] text-[var(--brand-slate-light)] tracking-wider hidden sm:inline">Groq</span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-1">
-                <button type="button" disabled title="Voice input coming soon" className="p-2 sm:p-1.5 rounded-lg min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 flex items-center justify-center text-[var(--brand-slate-light)] opacity-60 cursor-not-allowed" aria-label="Voice input (coming soon)">
-                  <Mic className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+              <div className="flex items-center gap-2 w-full sm:w-auto sm:justify-end">
+                <button type="button" disabled title="Voice input coming soon" className="p-2 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--brand-slate-light)] opacity-60 cursor-not-allowed shrink-0 sm:min-w-0" aria-label="Voice input (coming soon)">
+                  <Mic className="w-4 h-4" />
                 </button>
-                <button type="button" onClick={onClear} className="p-2 sm:p-1.5 hover:bg-[#5d707f]/30 rounded-lg min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 flex items-center justify-center text-[var(--brand-slate-light)] hover:text-[#f97316] transition-colors touch-manipulation" aria-label="Clear and start new question">
-                  <RotateCcw className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                <button type="button" onClick={onClear} className="p-2 hover:bg-[#5d707f]/30 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--brand-slate-light)] hover:text-[#f97316] transition-colors touch-manipulation shrink-0 sm:min-w-0" aria-label="Clear and start new question">
+                  <RotateCcw className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleSearch()}
                   disabled={isTyping}
-                  className="font-mono bg-[#f97316] text-white px-5 py-3 sm:py-1.5 rounded-lg text-[12px] sm:text-[11px] min-h-[44px] min-w-[80px] sm:min-w-0 flex items-center justify-center gap-2 hover:bg-[#ea580c] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 shadow-lg shadow-[#f97316]/20 touch-manipulation"
+                  className="font-mono bg-[#f97316] text-white px-4 py-3 rounded-lg text-[12px] min-h-[44px] flex-1 min-w-0 sm:flex-initial sm:flex-none sm:px-4 sm:py-1.5 sm:text-[11px] flex items-center justify-center gap-2 hover:bg-[#ea580c] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 shadow-lg shadow-[#f97316]/20 touch-manipulation"
                 >
                   {isTyping ? "Processing" : "Run"}
                   {isTyping ? (
-                    <span className="w-4 h-4 sm:w-3.5 sm:h-3.5 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                    <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin shrink-0" />
                   ) : (
-                    <ArrowRight className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                    <ArrowRight className="w-4 h-4 shrink-0" />
                   )}
                 </button>
               </div>

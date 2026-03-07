@@ -13,7 +13,6 @@ import {
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { BottomNav } from './components/BottomNav';
 import { ChatErrorBoundary } from './components/ChatErrorBoundary';
 import { ProjectCard } from './components/ProjectCard';
 import { SearchTerminal } from './components/SearchTerminal';
@@ -292,7 +291,7 @@ const App: React.FC = () => {
         />
       )}
 
-      <main id="main-content" ref={mainRef} tabIndex={-1} className="flex-1 flex flex-col relative overflow-x-hidden overflow-y-auto md:overflow-hidden z-10 lenis lenis-smooth pb-24 md:pb-0" aria-label="Main content">
+      <main id="main-content" ref={mainRef} tabIndex={-1} className="flex-1 flex flex-col relative overflow-x-hidden overflow-y-auto md:overflow-hidden z-10 lenis lenis-smooth pb-8 md:pb-0" aria-label="Main content">
         <div ref={contentRef} className="lenis-content flex flex-col min-h-full h-max flex-shrink-0" tabIndex={-1}>
           {!sidebarOpen && (
             <button onClick={() => setSidebarOpen(true)} className="absolute top-4 left-4 z-30 p-2 bg-[var(--brand-bg)]/95 border border-[#5d707f]/50 rounded-lg hover:bg-[#5d707f]/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg touch-manipulation" aria-label="Open menu">
@@ -523,7 +522,6 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
       <Analytics />
       <SpeedInsights />
     </div>
