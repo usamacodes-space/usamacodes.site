@@ -300,7 +300,7 @@ const App: React.FC = () => {
             </button>
           )}
 
-          <div className={`max-w-4xl mx-auto w-full py-6 sm:py-10 flex flex-col min-h-[calc(100vh-5rem)] md:min-h-full flex-1 ${!sidebarOpen ? 'pl-14 pr-4 sm:pl-16 sm:pr-6 md:pl-8 md:pr-8' : 'px-4 sm:px-6 md:px-8'}`}>
+          <div className={`max-w-4xl mx-auto w-full py-6 sm:py-10 flex flex-col items-center min-h-[calc(100vh-5rem)] md:min-h-full flex-1 ${!sidebarOpen ? 'pl-14 pr-14 sm:pl-16 sm:pr-16 md:pl-8 md:pr-8' : 'px-4 sm:px-6 md:px-8'}`}>
           {activeTab === 'start' && (
             <ChatErrorBoundary onRetry={() => handleSearch(query)}>
               <SearchTerminal
