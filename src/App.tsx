@@ -152,13 +152,32 @@ const App: React.FC = () => {
     contentRef.current?.focus({ preventScroll: true });
   }, [activeTab]);
 
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false);
+
   useEffect(() => {
     const onResize = () => {
-      setSidebarOpen(window.innerWidth >= MOBILE_BREAKPOINT);
+      const mobile = window.innerWidth < MOBILE_BREAKPOINT;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile);
     };
+    onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  const handleSetActiveTab = useCallback((id: string) => {
+    setActiveTab(id);
+    if (isMobile) setSidebarOpen(false);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isMobile || !sidebarOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSidebarOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isMobile, sidebarOpen]);
 
   useEffect(() => {
     if (!showSettings || !settingsModalRef.current) return;
@@ -240,17 +259,38 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isSnowing={isSnowing}
-        setIsSnowing={setIsSnowing}
-        onOpenSettings={openSettings}
-      />
+      {isMobile && sidebarOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden
+          />
+          <Sidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            activeTab={activeTab}
+            setActiveTab={handleSetActiveTab}
+            isSnowing={isSnowing}
+            setIsSnowing={setIsSnowing}
+            onOpenSettings={openSettings}
+            overlay
+          />
+        </div>
+      )}
+      {!isMobile && (
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          isSnowing={isSnowing}
+          setIsSnowing={setIsSnowing}
+          onOpenSettings={openSettings}
+        />
+      )}
 
-      <main id="main-content" ref={mainRef} tabIndex={-1} className="flex-1 flex flex-col relative overflow-hidden z-10 lenis lenis-smooth pb-20 md:pb-0" aria-label="Main content">
+      <main id="main-content" ref={mainRef} tabIndex={-1} className="flex-1 flex flex-col relative overflow-x-hidden overflow-y-auto md:overflow-hidden z-10 lenis lenis-smooth pb-24 md:pb-0" aria-label="Main content">
         <div ref={contentRef} className="lenis-content flex flex-col min-h-full h-max flex-shrink-0" tabIndex={-1}>
           {!sidebarOpen && (
             <button onClick={() => setSidebarOpen(true)} className="absolute top-4 left-4 z-30 p-2 bg-[var(--brand-bg)]/95 border border-[#5d707f]/50 rounded-lg hover:bg-[#5d707f]/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg touch-manipulation" aria-label="Open menu">
@@ -297,17 +337,17 @@ const App: React.FC = () => {
 
           {activeTab === 'experience' && (
             <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] max-w-2xl mx-auto w-full">
-              <div className="text-center mb-12">
+              <div className="text-center mb-8 md:mb-12">
                  <h2 className="font-mono text-xl font-medium text-[#ecebf3] tracking-wide">Protocol trace</h2>
                  <p className="font-mono text-[12px] text-[var(--brand-slate-light)] mt-1">System Event Log</p>
               </div>
 
               <div className="relative">
-                <div className="absolute left-[48px] top-[20px] bottom-4 w-[1px] border-l border-dashed border-[#5d707f]/50"></div>
-                <div className="relative space-y-12">
+                <div className="absolute left-[48px] top-[20px] bottom-4 w-[1px] border-l border-dashed border-[#5d707f]/50 hidden md:block"></div>
+                <div className="relative space-y-6 md:space-y-12">
                   {EXPERIENCE.map((exp, idx) => (
-                    <div key={idx} className="relative flex items-start gap-8">
-                      <div className="mt-1 z-10 shrink-0 w-24 flex justify-center">
+                    <div key={idx} className="relative flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
+                      <div className="md:mt-1 z-10 shrink-0 w-24 flex justify-center md:justify-center">
                         <SignalNode />
                       </div>
                       <div className="flex-1 bg-[#5d707f]/10 border border-[#5d707f]/40 p-6 rounded-2xl hover:border-[#f97316]/50 hover:shadow-xl hover:shadow-[#f97316]/10 transition-all duration-300 group shadow-xl">
@@ -346,7 +386,7 @@ const App: React.FC = () => {
               <h2 className="font-mono text-xl font-medium text-[#ecebf3] mb-10 tracking-tight text-center">Academic logs</h2>
               <div className="space-y-5">
                 {EDUCATION.map((edu, idx) => (
-                  <div key={idx} className="p-6 rounded-2xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-xl hover:shadow-[#f97316]/10 transition-all duration-300 group relative opacity-0 animate-fade-in-up [animation-fill-mode:forwards]" style={{ animationDelay: `${(idx + 1) * 80}ms` }}>
+                  <div key={idx} className="p-4 sm:p-6 rounded-2xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-xl hover:shadow-[#f97316]/10 transition-all duration-300 group relative opacity-0 animate-fade-in-up [animation-fill-mode:forwards]" style={{ animationDelay: `${(idx + 1) * 80}ms` }}>
                     <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-3 mb-3">
                       <div className="flex flex-col gap-2">
                         <h3 className="font-mono text-sm font-medium text-[#ecebf3] group-hover:text-[#f97316] transition-colors tracking-tight">{edu.degree}</h3>
@@ -368,7 +408,7 @@ const App: React.FC = () => {
               <h2 className="font-mono text-xl font-medium text-[#ecebf3] mb-8 tracking-tight text-center">Terminal FAQ</h2>
               <div className="space-y-3">
                 {FAQ_ITEMS.map((faq, i) => (
-                  <div key={i} className="p-5 rounded-2xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 transition-all duration-300 group opacity-0 animate-fade-in-up [animation-fill-mode:forwards] cursor-default" style={{ animationDelay: `${(i + 1) * 60}ms` }}>
+                    <div key={i} className="p-4 sm:p-5 rounded-2xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 transition-all duration-300 group opacity-0 animate-fade-in-up [animation-fill-mode:forwards] cursor-default" style={{ animationDelay: `${(i + 1) * 60}ms` }}>
                     <div className="flex items-start gap-3 mb-2">
                        <HelpCircle className="w-4 h-4 text-[#f97316]/80 mt-0.5 shrink-0" />
                        <h3 className="font-mono text-[14px] font-medium text-[#ecebf3] group-hover:text-[#f97316] transition-colors">{faq.question}</h3>
@@ -386,7 +426,7 @@ const App: React.FC = () => {
                 <form onSubmit={handleContactSubmit} className="relative">
                   <div className="rounded-3xl overflow-hidden bg-[var(--brand-bg)]/95 border border-[#5d707f]/25 shadow-xl shadow-black/10">
                     <div className="absolute inset-0 rounded-3xl bg-[#f97316]/5 pointer-events-none" aria-hidden />
-                    <div className="relative p-8 sm:p-12 pb-6">
+                    <div className="relative p-6 sm:p-8 md:p-12 pb-6">
                       {CONTACT_STEPS.map((step, i) => {
                         const isActive = contactStep === i + 1;
                         if (!isActive) return null;
@@ -426,8 +466,8 @@ const App: React.FC = () => {
                         );
                       })}
                     </div>
-                    <div className="relative px-8 sm:px-12 py-6 pb-8 flex items-center justify-between gap-4 border-t border-[#5d707f]/20">
-                      <button type="button" onClick={handleContactBack} className={`font-mono text-[12px] text-[var(--brand-slate-light)] hover:text-[#ecebf3] transition-colors ${contactStep === 1 ? 'invisible' : ''}`}>
+                    <div className="relative px-6 sm:px-8 md:px-12 py-6 pb-8 flex items-center justify-between gap-4 border-t border-[#5d707f]/20">
+                      <button type="button" onClick={handleContactBack} className={`font-mono text-[12px] text-[var(--brand-slate-light)] hover:text-[#ecebf3] transition-colors min-h-[44px] flex items-center touch-manipulation ${contactStep === 1 ? 'invisible' : ''}`}>
                         Back
                       </button>
                       <div className="flex items-center gap-2">
@@ -440,12 +480,12 @@ const App: React.FC = () => {
                           type="button"
                           onClick={handleContactNext}
                           disabled={(contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)}
-                          className="font-mono bg-[#f97316] hover:bg-[#ea580c] disabled:opacity-50 disabled:cursor-not-allowed text-white text-[11px] h-10 px-6 rounded-lg font-medium transition-all hover:scale-[1.02] active:scale-[0.98]"
+                          className="font-mono bg-[#f97316] hover:bg-[#ea580c] disabled:opacity-50 disabled:cursor-not-allowed text-white text-[11px] min-h-[44px] px-6 rounded-lg font-medium transition-all hover:scale-[1.02] active:scale-[0.98] touch-manipulation"
                         >
                           Next
                         </button>
                       ) : (
-                        <button type="submit" disabled={!canSubmit} className="font-mono bg-[#f97316] hover:bg-[#ea580c] disabled:opacity-50 disabled:cursor-not-allowed text-white text-[11px] h-10 px-6 rounded-lg font-medium flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]" aria-label="Send message">
+                        <button type="submit" disabled={!canSubmit} className="font-mono bg-[#f97316] hover:bg-[#ea580c] disabled:opacity-50 disabled:cursor-not-allowed text-white text-[11px] min-h-[44px] px-6 rounded-lg font-medium flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98] touch-manipulation" aria-label="Send message">
                           Send <Send className="w-3 h-3" />
                         </button>
                       )}

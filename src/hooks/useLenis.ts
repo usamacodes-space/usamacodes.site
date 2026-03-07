@@ -11,6 +11,10 @@ export function useLenis(wrapperRef: React.RefObject<HTMLElement | null>) {
     const content = wrapper.firstElementChild as HTMLElement;
     if (!content) return;
 
+    const isMobile = window.innerWidth < 768;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isMobile || prefersReducedMotion) return;
+
     const lenis = new Lenis({
       wrapper,
       content,

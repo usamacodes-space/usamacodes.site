@@ -27,14 +27,14 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
 
   return (
     <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full py-6 sm:py-8 px-1">
-      <div className="text-center mb-6 sm:mb-10 opacity-0 animate-fade-in-up [animation-fill-mode:forwards]">
+      <div className="text-center mb-5 sm:mb-8 opacity-0 animate-fade-in-up [animation-fill-mode:forwards]">
         <h1 className="font-mono text-2xl sm:text-3xl font-medium text-[#ecebf3] mb-2 leading-tight">
           Ask Me Anything <Sparkles className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-[#f97316] ml-1" />
         </h1>
         <p className="font-mono text-[var(--brand-slate-light)] text-sm sm:text-base px-1">Instant Answers About My Work, Projects, And Experience</p>
       </div>
 
-      <div className="relative group mb-8 sm:mb-12">
+      <div className="relative group mb-6 sm:mb-10">
         <div className="absolute -inset-0.5 bg-gradient-to-r from-[#f97316]/20 to-[#5d707f]/10 rounded-xl opacity-40 group-hover:opacity-70 transition-opacity"></div>
         <div className="relative rounded-xl p-1 shadow-2xl focus-within:border-[#f97316]/50 focus-within:shadow-[#f97316]/10 focus-within:shadow-2xl transition-all duration-300 bg-[var(--brand-bg)] border border-[#5d707f]/40">
           <div className="flex flex-col">

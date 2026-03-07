@@ -11,6 +11,7 @@ interface SidebarProps {
   isSnowing: boolean;
   setIsSnowing: (snowing: boolean) => void;
   onOpenSettings: () => void;
+  overlay?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -21,10 +22,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isSnowing,
   setIsSnowing,
   onOpenSettings,
+  overlay = false,
 }) => {
   const { theme, toggleTheme } = useTheme();
+  const asideClass = overlay
+    ? 'fixed inset-y-0 left-0 w-64 max-w-[85vw] z-50 flex flex-col border-r border-[#5d707f]/40 overflow-y-auto font-mono bg-[var(--brand-bg)] shadow-xl animate-slide-in-left'
+    : `${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 ease-in-out flex flex-col border-r border-[#5d707f]/40 overflow-hidden z-20 font-mono bg-[var(--brand-bg)]`;
   return (
-    <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 ease-in-out flex flex-col border-r border-[#5d707f]/40 overflow-hidden z-20 font-mono bg-[var(--brand-bg)]`}>
+    <aside className={asideClass}>
       <div className="p-5 flex flex-col items-center text-center border-b border-[#5d707f]/40 relative">
         <button
           onClick={() => setSidebarOpen(false)}

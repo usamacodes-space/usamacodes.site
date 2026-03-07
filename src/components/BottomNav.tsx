@@ -8,51 +8,73 @@ interface BottomNavProps {
   setActiveTab: (tab: string) => void;
 }
 
+const SHORT_LABELS: Record<string, string> = {
+  start: 'Start',
+  projects: 'Projects',
+  experience: 'Exp',
+  education: 'Edu',
+  faq: 'FAQ',
+  contact: 'Contact',
+};
+
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   setActiveTab
 }) => {
   const { theme, toggleTheme } = useTheme();
 
+  const navItemClass = (isActive: boolean) =>
+    `flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 min-h-[44px] py-2 px-1 rounded-lg transition-all active:scale-95 touch-manipulation ${
+      isActive ? 'text-[#f97316]' : 'text-[var(--brand-slate-light)]'
+    }`;
+
+  const row1Items = NAV_ITEMS.slice(0, 4);
+  const row2Items = NAV_ITEMS.slice(4);
+
+  const renderNavButton = (item: (typeof NAV_ITEMS)[0]) => (
+    <button
+      key={item.id}
+      onClick={() => setActiveTab(item.id)}
+      className={navItemClass(activeTab === item.id)}
+      aria-current={activeTab === item.id ? 'page' : undefined}
+      aria-label={item.label}
+    >
+      <span className="shrink-0 opacity-80">{React.cloneElement(item.icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}</span>
+      <span className="font-mono text-[9px] sm:text-[10px] font-medium truncate w-full text-center">{SHORT_LABELS[item.id] ?? item.label}</span>
+    </button>
+  );
+
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--brand-bg)]/98 backdrop-blur-xl border-t border-[#5d707f]/40 flex items-stretch py-2 px-2 gap-0 min-h-[56px]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--brand-bg)]/98 backdrop-blur-xl border-t border-[#5d707f]/40 flex flex-col py-2 px-2 min-h-[100px]"
       style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
       aria-label="Mobile navigation"
     >
-      {NAV_ITEMS.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => setActiveTab(item.id)}
-          className={`flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 py-2 px-1 rounded-lg transition-all active:scale-95 touch-manipulation ${
-            activeTab === item.id ? 'text-[#f97316]' : 'text-[var(--brand-slate-light)]'
-          }`}
-          aria-current={activeTab === item.id ? 'page' : undefined}
-          aria-label={item.label}
+      <div className="flex w-full gap-0 shrink-0">
+        {row1Items.map(renderNavButton)}
+      </div>
+      <div className="flex w-full gap-0 shrink-0">
+        {row2Items.map(renderNavButton)}
+        <a
+          href={RESUME_URL}
+          download
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${navItemClass(false)} hover:text-[#f97316]`}
+          aria-label="Download Resume"
         >
-          <span className="shrink-0 opacity-80">{React.cloneElement(item.icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}</span>
-          <span className="font-mono text-[9px] sm:text-[10px] font-medium truncate w-full text-center max-w-[52px]">{item.label}</span>
+          <FileDown className="w-5 h-5 shrink-0 opacity-80" />
+          <span className="font-mono text-[9px] sm:text-[10px] truncate w-full text-center">Resume</span>
+        </a>
+        <button
+          onClick={toggleTheme}
+          className={`${navItemClass(false)} hover:text-[#f97316]`}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? <Sun className="w-5 h-5 shrink-0 opacity-80" /> : <Moon className="w-5 h-5 shrink-0 opacity-80" />}
+          <span className="font-mono text-[9px] sm:text-[10px] truncate w-full text-center">{theme === 'dark' ? 'Light' : 'Dark'}</span>
         </button>
-      ))}
-      <a
-        href={RESUME_URL}
-        download
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 py-2 px-1 text-[var(--brand-slate-light)] rounded-lg hover:text-[#f97316] transition-all active:scale-95 touch-manipulation"
-        aria-label="Download Resume"
-      >
-        <FileDown className="w-5 h-5 shrink-0 opacity-80" />
-        <span className="font-mono text-[9px] sm:text-[10px] truncate w-full text-center max-w-[52px]">Resume</span>
-      </a>
-      <button
-        onClick={toggleTheme}
-        className="flex flex-col items-center justify-center gap-0.5 flex-1 min-w-0 py-2 px-1 text-[var(--brand-slate-light)] rounded-lg hover:text-[#f97316] transition-all active:scale-95 touch-manipulation"
-        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {theme === 'dark' ? <Sun className="w-5 h-5 shrink-0 opacity-80" /> : <Moon className="w-5 h-5 shrink-0 opacity-80" />}
-        <span className="font-mono text-[9px] sm:text-[10px] truncate w-full text-center max-w-[52px]">{theme === 'dark' ? 'Light' : 'Dark'}</span>
-      </button>
+      </div>
     </nav>
   );
 };
