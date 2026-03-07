@@ -105,6 +105,11 @@ function ruleBasedQuery(prompt: string): string {
     return "I'm Usama Shafique, a Backend & AI-Integrated Software Engineer based in Stoke-on-Trent, UK. I build scalable Node.js systems with NestJS and integrate AI using LangChain and Ollama.";
   }
 
+  const outOfScopeTopics = ["game", "gaming", "hobby", "hobbies", "sport", "music", "film", "movie", "travel", "personal"];
+  if (words.some((w) => outOfScopeTopics.some((t) => w.includes(t) || t.includes(w)))) {
+    return `I don't have that information in my portfolio. Please reach out at ${CONTACT_EMAIL} for more details.`;
+  }
+
   return `I don't have specific information about that in my portfolio. For more details, reach out at ${CONTACT_EMAIL} — I'd be glad to chat!`;
 }
 
@@ -150,6 +155,11 @@ export async function queryPortfolio(prompt: string, isOnline = true): Promise<C
         return { text: answer, source: "api", error: false };
       }
       lastError = typeof data?.error === "string" ? data.error : res.statusText || "Request failed";
+      if (res.status === 429) {
+        const answer = ruleBasedQuery(text);
+        if (DEBUG) console.log("[Chat] Rate limited (429), silent rule-based fallback:", { query: text });
+        return { text: answer, source: "rule", error: false };
+      }
       if (attempt < MAX_RETRIES) await sleep(RETRY_DELAY_MS);
     } catch {
       lastError = "Network error";
