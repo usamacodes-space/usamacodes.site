@@ -54,9 +54,14 @@ function ruleBasedQuery(prompt: string): string {
   const text = prompt.trim() || "What can you tell me about Usama?";
   const words = tokenize(text);
 
+  const outOfScopeTopics = ["game", "gaming", "hobby", "hobbies", "sport", "music", "film", "movie", "travel", "personal"];
+  if (words.some((w) => outOfScopeTopics.some((t) => w.includes(t) || t.includes(w)))) {
+    return `I don't have that information in my portfolio. Please reach out at ${CONTACT_EMAIL} for more details.`;
+  }
+
   for (const { keywords, answer } of PROMPT_MAPPINGS) {
     const matchCount = keywords.filter((k) =>
-      words.some((w) => w.includes(k) || k.includes(w))
+      words.some((w) => w.length >= 3 && (w.includes(k) || k.includes(w)))
     ).length;
     if (matchCount >= 2) return answer;
   }
@@ -103,11 +108,6 @@ function ruleBasedQuery(prompt: string): string {
     words.includes("introduce")
   ) {
     return "I'm Usama Shafique, a Backend & AI-Integrated Software Engineer based in Stoke-on-Trent, UK. I build scalable Node.js systems with NestJS and integrate AI using LangChain and Ollama.";
-  }
-
-  const outOfScopeTopics = ["game", "gaming", "hobby", "hobbies", "sport", "music", "film", "movie", "travel", "personal"];
-  if (words.some((w) => outOfScopeTopics.some((t) => w.includes(t) || t.includes(w)))) {
-    return `I don't have that information in my portfolio. Please reach out at ${CONTACT_EMAIL} for more details.`;
   }
 
   return `I don't have specific information about that in my portfolio. For more details, reach out at ${CONTACT_EMAIL} — I'd be glad to chat!`;
@@ -168,6 +168,6 @@ export async function queryPortfolio(prompt: string, isOnline = true): Promise<C
   }
 
   const answer = ruleBasedQuery(text);
-  if (DEBUG) console.log("[Chat] API failed, rule-based fallback:", { query: text });
-  return { text: answer, source: "rule", error: true, errorMessage: lastError ?? undefined };
+  if (DEBUG) console.log("[Chat] API failed, silent rule-based fallback:", { query: text });
+  return { text: answer, source: "rule", error: false };
 }
