@@ -11,6 +11,7 @@ import {
   X
 } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { BottomNav } from './components/BottomNav';
 import { ChatErrorBoundary } from './components/ChatErrorBoundary';
 import { ProjectCard } from './components/ProjectCard';
@@ -522,6 +523,7 @@ const App: React.FC = () => {
       </main>
 
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Analytics />
     </div>
   );
 };
