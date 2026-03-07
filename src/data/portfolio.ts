@@ -5,16 +5,16 @@ import type { Experience as ExpType, Education as EduType } from "../types";
 export const CONTACT_EMAIL = "hello@usamacodes.space";
 export const RESUME_URL = "/resume.pdf";
 
-export const LINKEDIN_URL = "https://linkedin.com/in/usama-shafique";
-export const GITHUB_URL = "https://github.com/usama-shafique";
+export const LINKEDIN_URL = "https://linkedin.com/in/usamacodes-space";
+export const GITHUB_URL = "https://github.com/usamacodes-space";
 export const PORTFOLIO_URL = "https://usamacodes.space";
 
-/** Replace with project-specific repo URLs when available (e.g. https://github.com/usama-shafique/qr-menu-saas). */
+/** Replace with project-specific repo URLs when available (e.g. https://github.com/usamacodes-space/qr-menu-saas). */
 export const PROJECTS = [
-  { title: "QR Menu SaaS", description: "Full-stack restaurant management platform featuring role-based dashboards, subscription billing, and dynamic QR menu generation.", tags: ["Next.js", "Express.js", "PostgreSQL", "Prisma"], icon: "QrCode", sourceUrl: "https://github.com/usama-shafique", demoUrl: "https://usamacodes.space" },
-  { title: "ChatDocs (AI Chat)", description: "Developed an AI-driven document chat system enabling users to upload files and interact through natural language via RAG.", tags: ["LangChain", "FastAPI", "Ollama", "Python"], icon: "MessageSquare", sourceUrl: "https://github.com/usama-shafique", demoUrl: "https://usamacodes.space" },
-  { title: "GX Tickets", description: "Backend development for a large-scale ticketing and event workflow system with robust security.", tags: ["NestJS", "PostgreSQL", "JWT", "Prisma"], icon: "Ticket", sourceUrl: "https://github.com/usama-shafique", demoUrl: "https://usamacodes.space" },
-  { title: "QuikTix", description: "Collaborative project focused on scalable backend architectures and real-world production constraints.", tags: ["Clean Architecture", "REST API", "Database Design"], icon: "Layout", sourceUrl: "https://github.com/usama-shafique", demoUrl: "https://usamacodes.space" },
+  { title: "QR Menu SaaS", description: "Full-stack restaurant management platform featuring role-based dashboards, subscription billing, and dynamic QR menu generation.", tags: ["Next.js", "Express.js", "PostgreSQL", "Prisma"], icon: "QrCode", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
+  { title: "ChatDocs (AI Chat)", description: "Developed an AI-driven document chat system enabling users to upload files and interact through natural language via RAG.", tags: ["LangChain", "FastAPI", "Ollama", "Python"], icon: "MessageSquare", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
+  { title: "GX Tickets", description: "Backend development for a large-scale ticketing and event workflow system with robust security.", tags: ["NestJS", "PostgreSQL", "JWT", "Prisma"], icon: "Ticket", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
+  { title: "QuikTix", description: "Collaborative project focused on scalable backend architectures and real-world production constraints.", tags: ["Clean Architecture", "REST API", "Database Design"], icon: "Layout", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
 ];
 
 export const EXPERIENCE: ExpType[] = [

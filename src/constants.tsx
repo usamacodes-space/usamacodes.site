@@ -16,8 +16,8 @@ export const CAPABILITIES = [
 ];
 
 export const SOCIAL_LINKS = [
-  { label: 'GitHub', url: 'https://github.com/usama-shafique', icon: <Github className="w-5 h-5" /> },
-  { label: 'LinkedIn', url: 'https://linkedin.com/in/usama-shafique', icon: <Linkedin className="w-5 h-5" /> },
+  { label: 'GitHub', url: 'https://github.com/usamacodes-space', icon: <Github className="w-5 h-5" /> },
+  { label: 'LinkedIn', url: 'https://linkedin.com/in/usamacodes-space', icon: <Linkedin className="w-5 h-5" /> },
   { label: 'Twitter', url: 'https://twitter.com/usama_codes', icon: <Twitter className="w-5 h-5" /> },
   { label: 'Portfolio', url: 'https://usamacodes.space', icon: <Globe className="w-5 h-5" /> },
 ];
