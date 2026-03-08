@@ -285,7 +285,7 @@ const App: React.FC = () => {
           tabIndex={-1}
           className="flex-1 overflow-y-auto lenis lenis-smooth"
         >
-          <div ref={contentRef} className="lenis-content" tabIndex={-1}>
+          <div ref={contentRef} className="lenis-content min-h-full" tabIndex={-1}>
           <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col min-h-full">
 
             {/* === START TAB === */}
