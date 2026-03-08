@@ -9,10 +9,10 @@ export const EXPERIENCE = EXP_RAW;
 export const EDUCATION = EDU_RAW;
 
 export const CAPABILITIES = [
-  { title: "Project Deep-dive", description: "Ask about specific technical challenges faced during the QR Menu SaaS development.", prompt: "Tell me about the technical challenges you faced in the QR Menu SaaS project.", icon: <Layout className="w-6 h-6 text-[#f97316]" /> },
-  { title: "Backend Expertise", description: "Query details about NestJS microservices and PostgreSQL optimization techniques.", prompt: "How do you optimize PostgreSQL queries in a NestJS application?", icon: <Cpu className="w-6 h-6 text-[#f97316]" /> },
-  { title: "AI Integration", description: "Explore my experience with RAG, LangChain, and integrating Ollama into production.", prompt: "Explain your process for building a RAG pipeline with LangChain.", icon: <BrainCircuit className="w-6 h-6 text-[#f97316]" /> },
-  { title: "Career Goals", description: "Find out more about my MSc studies at Keele and my future professional roadmap.", prompt: "What are your main focus areas during your MSc at Keele University?", icon: <Sparkles className="w-6 h-6 text-[#f97316]" /> },
+  { title: "Project Showcase", description: "View my latest work", prompt: "Tell me about your projects and latest work.", icon: <Layout className="w-6 h-6 text-[#f97316]" /> },
+  { title: "Technical Stack", description: "Tools and technologies", prompt: "What technologies and tools do you use?", icon: <Cpu className="w-6 h-6 text-[#f97316]" /> },
+  { title: "AI Solutions", description: "Custom LLM builds", prompt: "Tell me about your AI and LLM experience.", icon: <BrainCircuit className="w-6 h-6 text-[#f97316]" /> },
+  { title: "Contact Me", description: "Let's collaborate", prompt: "How can I contact you or collaborate?", icon: <Mail className="w-6 h-6 text-[#f97316]" /> },
 ];
 
 export const SOCIAL_LINKS = [
