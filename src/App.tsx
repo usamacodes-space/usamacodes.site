@@ -271,16 +271,16 @@ const App: React.FC = () => {
         id="main-content"
         ref={mainRef}
         tabIndex={-1}
-        className="flex-1 overflow-hidden z-10 flex flex-col"
+        className="flex-1 overflow-hidden z-10 flex flex-col outline-none"
         aria-label="Main content"
       >
         {/* Scrollable content with Lenis smooth scroll */}
         <div
           ref={scrollRef}
           tabIndex={-1}
-          className="flex-1 overflow-y-auto lenis lenis-smooth"
+          className="flex-1 overflow-y-auto lenis lenis-smooth outline-none"
         >
-          <div ref={contentRef} className="lenis-content" tabIndex={-1}>
+          <div ref={contentRef} className="lenis-content outline-none" tabIndex={-1}>
           <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col min-h-full">
 
             {/* === START TAB === */}
