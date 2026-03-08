@@ -273,11 +273,6 @@ const App: React.FC = () => {
         tabIndex={-1}
         className="flex-1 overflow-hidden z-10 flex flex-col"
         aria-label="Main content"
-        style={{
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          backgroundColor: isDark ? 'rgba(15, 17, 23, 0.45)' : 'rgba(244, 246, 249, 0.45)',
-        }}
       >
         {/* Scrollable content with Lenis smooth scroll */}
         <div
@@ -285,7 +280,7 @@ const App: React.FC = () => {
           tabIndex={-1}
           className="flex-1 overflow-y-auto lenis lenis-smooth"
         >
-          <div ref={contentRef} className="lenis-content min-h-full" tabIndex={-1}>
+          <div ref={contentRef} className="lenis-content" tabIndex={-1}>
           <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col min-h-full">
 
             {/* === START TAB === */}
