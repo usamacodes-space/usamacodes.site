@@ -257,11 +257,12 @@ const App: React.FC = () => {
         id="main-content"
         ref={mainRef}
         tabIndex={-1}
-        className="flex-1 overflow-x-hidden overflow-y-auto z-10"
+        className="flex-1 overflow-hidden z-10 flex flex-col"
         aria-label="Main content"
       >
-        <div ref={contentRef} tabIndex={-1}>
-          <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        {/* Content area — fills viewport between header and footer, no page scroll */}
+        <div ref={contentRef} tabIndex={-1} className="flex-1 overflow-hidden">
+          <div ref={sectionRef} className="h-full max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col overflow-y-auto">
 
             {/* === START TAB === */}
             {activeTab === 'start' && (
@@ -281,21 +282,21 @@ const App: React.FC = () => {
 
             {/* === ABOUT TAB === */}
             {activeTab === 'about' && (
-              <div>
-                <div className="mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+              <div className="flex-1 flex flex-col">
+                <div className="mb-4">
+                  <h2 className="text-lg sm:text-xl font-semibold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                     About Me
                   </h2>
-                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                  <p className="text-xs sm:text-sm" style={{ color: 'var(--brand-slate-light)' }}>
                     Get to know me and what I do
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-4xl">
-                  {/* Profile card - spans 2 cols on desktop */}
-                  <BentoCard className="bento-animate md:col-span-2">
-                    <div className="flex flex-col sm:flex-row items-start gap-5">
-                      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2" style={{ borderColor: 'rgba(249, 115, 22, 0.3)' }}>
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 auto-rows-min">
+                  {/* Profile card */}
+                  <BentoCard className="bento-animate md:col-span-2" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                    <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border-2" style={{ borderColor: 'rgba(249, 115, 22, 0.3)' }}>
                         <img
                           src="/avatar.jpg"
                           alt="Usama Shafique"
@@ -308,98 +309,63 @@ const App: React.FC = () => {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg sm:text-xl font-bold mb-1" style={{ color: 'var(--brand-light)' }}>
+                        <h3 className="text-base sm:text-lg font-bold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                           Usama Shafique
                         </h3>
-                        <p className="text-sm font-medium mb-3" style={{ color: '#f97316' }}>
+                        <p className="text-xs sm:text-sm font-medium mb-2" style={{ color: '#f97316' }}>
                           Backend & AI-Integrated Software Engineer
                         </p>
-                        <p className="text-xs sm:text-[13px] leading-relaxed" style={{ color: 'var(--brand-slate-light)' }}>
-                          Backend Software Engineer experienced in building AI-integrated Node.js systems using NestJS, PostgreSQL, and Docker. Skilled in developing scalable REST APIs, authentication systems, and real-time features with Socket.io. Passionate about using tools like LangChain, FastAPI, and Ollama to bring AI automation into production systems.
+                        <p className="text-[11px] sm:text-xs leading-relaxed" style={{ color: 'var(--brand-slate-light)' }}>
+                          Backend Software Engineer experienced in building AI-integrated Node.js systems using NestJS, PostgreSQL, and Docker. Skilled in developing scalable REST APIs, authentication systems, and real-time features with Socket.io.
                         </p>
                       </div>
                     </div>
                   </BentoCard>
 
-                  {/* Location card */}
-                  <BentoCard className="bento-animate">
-                    <div className="flex items-start gap-3 mb-3">
-                      <div
-                        className="p-2.5 rounded-xl shrink-0"
-                        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
-                      >
-                        <MapPin size={18} style={{ color: '#f97316' }} />
+                  {/* Location + Email card */}
+                  <BentoCard className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                    <div className="flex items-center gap-2.5 mb-2.5">
+                      <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}>
+                        <MapPin size={14} style={{ color: '#f97316' }} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>Location</h4>
-                        <p className="text-xs mt-0.5" style={{ color: 'var(--brand-slate-light)' }}>Stoke-on-Trent, England, UK</p>
+                        <h4 className="font-semibold text-xs" style={{ color: 'var(--brand-light)' }}>Location</h4>
+                        <p className="text-[11px]" style={{ color: 'var(--brand-slate-light)' }}>Stoke-on-Trent, UK</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <div
-                        className="p-2.5 rounded-xl shrink-0"
-                        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
-                      >
-                        <Send size={18} style={{ color: '#f97316' }} />
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}>
+                        <Send size={14} style={{ color: '#f97316' }} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>Email</h4>
-                        <a href={`mailto:${CONTACT_EMAIL}`} className="text-xs mt-0.5 hover:underline" style={{ color: '#f97316' }}>
-                          {CONTACT_EMAIL}
-                        </a>
+                        <h4 className="font-semibold text-xs" style={{ color: 'var(--brand-light)' }}>Email</h4>
+                        <a href={`mailto:${CONTACT_EMAIL}`} className="text-[11px] hover:underline" style={{ color: '#f97316' }}>{CONTACT_EMAIL}</a>
                       </div>
                     </div>
                   </BentoCard>
 
                   {/* Skills card */}
-                  <BentoCard className="bento-animate md:col-span-2">
-                    <div className="flex items-center gap-2.5 mb-4">
-                      <div
-                        className="p-2.5 rounded-xl shrink-0"
-                        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
-                      >
-                        <Code2 size={18} style={{ color: '#f97316' }} />
+                  <BentoCard className="bento-animate md:col-span-2" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}>
+                        <Code2 size={14} style={{ color: '#f97316' }} />
                       </div>
-                      <h4 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>Tech Stack & Skills</h4>
+                      <h4 className="font-semibold text-xs" style={{ color: 'var(--brand-light)' }}>Tech Stack</h4>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {['NestJS', 'Node.js', 'PostgreSQL', 'Docker', 'Socket.io', 'LangChain', 'FastAPI', 'Ollama', 'Prisma', 'React', 'Next.js', 'Tailwind CSS', 'TypeScript', 'Python', 'REST API', 'JWT/RBAC', 'Redis', 'Git'].map((skill) => (
-                        <Chip
-                          key={skill}
-                          label={skill}
-                          size="small"
-                          sx={{
-                            fontSize: '0.7rem',
-                            bgcolor: isDark ? 'rgba(249,115,22,0.08)' : 'rgba(249,115,22,0.06)',
-                            color: isDark ? '#e0cfc2' : '#6b4c30',
-                            border: '1px solid',
-                            borderColor: isDark ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.15)',
-                          }}
-                        />
+                        <Chip key={skill} label={skill} size="small" sx={{ fontSize: '0.65rem', height: 24, bgcolor: isDark ? 'rgba(249,115,22,0.08)' : 'rgba(249,115,22,0.06)', color: isDark ? '#e0cfc2' : '#6b4c30', border: '1px solid', borderColor: isDark ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.15)' }} />
                       ))}
                     </div>
                   </BentoCard>
 
-                  {/* Social / Connect card */}
-                  <BentoCard className="bento-animate">
-                    <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--brand-light)' }}>Connect</h4>
-                    <div className="space-y-2.5">
+                  {/* Connect card */}
+                  <BentoCard className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                    <h4 className="font-semibold text-xs mb-2.5" style={{ color: 'var(--brand-light)' }}>Connect</h4>
+                    <div className="space-y-1.5">
                       {SOCIAL_LINKS.map((link) => (
-                        <a
-                          key={link.label}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors"
-                          style={{
-                            color: isDark ? '#b5c1d2' : '#4a5568',
-                            backgroundColor: isDark ? 'rgba(93,112,127,0.06)' : 'rgba(93,112,127,0.04)',
-                            border: `1px solid ${isDark ? 'rgba(93,112,127,0.12)' : 'rgba(93,112,127,0.08)'}`,
-                          }}
-                        >
-                          <span style={{ color: '#f97316' }}>
-                            {React.cloneElement(link.icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4' })}
-                          </span>
+                        <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors" style={{ color: isDark ? '#b5c1d2' : '#4a5568', backgroundColor: isDark ? 'rgba(93,112,127,0.06)' : 'rgba(93,112,127,0.04)', border: `1px solid ${isDark ? 'rgba(93,112,127,0.12)' : 'rgba(93,112,127,0.08)'}` }}>
+                          <span style={{ color: '#f97316' }}>{React.cloneElement(link.icon as React.ReactElement<{ className?: string }>, { className: 'w-3.5 h-3.5' })}</span>
                           {link.label}
                         </a>
                       ))}
@@ -407,18 +373,17 @@ const App: React.FC = () => {
                   </BentoCard>
 
                   {/* Quick facts */}
-                  <BentoCard className="bento-animate md:col-span-3">
-                    <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--brand-light)' }}>Quick Facts</h4>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <BentoCard className="bento-animate md:col-span-3" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       {[
                         { label: 'Experience', value: '2+ Years' },
-                        { label: 'Degree', value: 'MSc AI & Data Science' },
+                        { label: 'Degree', value: 'MSc AI & DS' },
                         { label: 'Focus', value: 'Backend & AI' },
                         { label: 'Availability', value: 'Remote / Hybrid' },
                       ].map((fact) => (
                         <div key={fact.label} className="text-center">
-                          <div className="text-base sm:text-lg font-bold" style={{ color: '#f97316' }}>{fact.value}</div>
-                          <div className="text-[11px] mt-1" style={{ color: 'var(--brand-slate-light)' }}>{fact.label}</div>
+                          <div className="text-sm sm:text-base font-bold" style={{ color: '#f97316' }}>{fact.value}</div>
+                          <div className="text-[10px] mt-0.5" style={{ color: 'var(--brand-slate-light)' }}>{fact.label}</div>
                         </div>
                       ))}
                     </div>
@@ -429,16 +394,16 @@ const App: React.FC = () => {
 
             {/* === PROJECTS TAB === */}
             {activeTab === 'projects' && (
-              <div ref={projectsRef}>
-                <div className="mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+              <div ref={projectsRef} className="flex-1 flex flex-col">
+                <div className="mb-4">
+                  <h2 className="text-lg sm:text-xl font-semibold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                     Projects
                   </h2>
-                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                  <p className="text-xs sm:text-sm" style={{ color: 'var(--brand-slate-light)' }}>
                     Technical prototypes and production-grade applications
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 auto-rows-min">
                   {PROJECTS.map((p, i) => (
                     <div key={i} className="bento-animate project-card-wrap">
                       <ProjectCard project={p} featured={i === 0} />
@@ -450,46 +415,34 @@ const App: React.FC = () => {
 
             {/* === EXPERIENCE TAB === */}
             {activeTab === 'experience' && (
-              <div>
-                <div className="mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+              <div className="flex-1 flex flex-col">
+                <div className="mb-4">
+                  <h2 className="text-lg sm:text-xl font-semibold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                     Experience
                   </h2>
-                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                  <p className="text-xs sm:text-sm" style={{ color: 'var(--brand-slate-light)' }}>
                     Professional journey and key contributions
                   </p>
                 </div>
-                <div className="grid grid-cols-1 gap-4 sm:gap-5 max-w-3xl">
+                <div className="flex-1 grid grid-cols-1 gap-3 sm:gap-4 max-w-3xl auto-rows-min">
                   {EXPERIENCE.map((exp, idx) => (
-                    <BentoCard key={idx} className="bento-animate">
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
-                        <div className="flex items-start gap-3">
-                          <div
-                            className="p-2.5 rounded-xl shrink-0"
-                            style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
-                          >
-                            <Briefcase size={18} style={{ color: '#f97316' }} />
+                    <BentoCard key={idx} className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                        <div className="flex items-start gap-2.5">
+                          <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}>
+                            <Briefcase size={16} style={{ color: '#f97316' }} />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-sm sm:text-base" style={{ color: 'var(--brand-light)' }}>
-                              {exp.role}
-                            </h3>
-                            <p className="text-xs font-medium" style={{ color: '#f97316' }}>
-                              {exp.company}
-                            </p>
+                            <h3 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>{exp.role}</h3>
+                            <p className="text-xs font-medium" style={{ color: '#f97316' }}>{exp.company}</p>
                           </div>
                         </div>
-                        <Chip
-                          icon={<Activity size={12} className="animate-pulse" />}
-                          label={exp.period}
-                          size="small"
-                          sx={{ fontSize: '0.7rem', bgcolor: 'rgba(249,115,22,0.1)', color: '#f97316', border: '1px solid rgba(249,115,22,0.2)' }}
-                        />
+                        <Chip icon={<Activity size={10} className="animate-pulse" />} label={exp.period} size="small" sx={{ fontSize: '0.65rem', height: 24, bgcolor: 'rgba(249,115,22,0.1)', color: '#f97316', border: '1px solid rgba(249,115,22,0.2)' }} />
                       </div>
-                      <ul className="space-y-2.5 pl-1">
+                      <ul className="space-y-1.5 pl-1">
                         {exp.highlights.map((h, i) => (
-                          <li key={i} className="flex gap-2.5 text-xs sm:text-[13px] leading-relaxed" style={{ color: 'var(--brand-slate-light)' }}>
-                            <ChevronRight size={14} className="shrink-0 mt-0.5" style={{ color: '#f97316', opacity: 0.6 }} />
+                          <li key={i} className="flex gap-2 text-[11px] sm:text-xs leading-relaxed" style={{ color: 'var(--brand-slate-light)' }}>
+                            <ChevronRight size={12} className="shrink-0 mt-0.5" style={{ color: '#f97316', opacity: 0.6 }} />
                             {h}
                           </li>
                         ))}
@@ -502,38 +455,31 @@ const App: React.FC = () => {
 
             {/* === EDUCATION TAB === */}
             {activeTab === 'education' && (
-              <div>
-                <div className="mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+              <div className="flex-1 flex flex-col items-start justify-center">
+                <div className="mb-4 w-full">
+                  <h2 className="text-lg sm:text-xl font-semibold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                     Education
                   </h2>
-                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                  <p className="text-xs sm:text-sm" style={{ color: 'var(--brand-slate-light)' }}>
                     Academic background and qualifications
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 max-w-3xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 max-w-3xl w-full">
                   {EDUCATION.map((edu, idx) => (
-                    <BentoCard key={idx} className="bento-animate">
-                      <div className="flex items-start gap-3 mb-3">
-                        <div
-                          className="p-2.5 rounded-xl shrink-0"
-                          style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
-                        >
-                          <GraduationCap size={18} style={{ color: '#f97316' }} />
+                    <BentoCard key={idx} className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                      <div className="flex items-start gap-2.5 mb-2.5">
+                        <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}>
+                          <GraduationCap size={16} style={{ color: '#f97316' }} />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="font-semibold text-sm break-words-mobile" style={{ color: 'var(--brand-light)' }}>
-                            {edu.degree}
-                          </h3>
-                          <p className="text-xs mt-0.5" style={{ color: '#f97316' }}>
-                            {edu.institution}
-                          </p>
+                          <h3 className="font-semibold text-xs sm:text-sm break-words-mobile" style={{ color: 'var(--brand-light)' }}>{edu.degree}</h3>
+                          <p className="text-[11px] mt-0.5" style={{ color: '#f97316' }}>{edu.institution}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <Chip label={edu.period} size="small" sx={{ fontSize: '0.65rem', bgcolor: 'rgba(93,112,127,0.1)', color: 'text.secondary' }} />
+                        <Chip label={edu.period} size="small" sx={{ fontSize: '0.6rem', height: 22, bgcolor: 'rgba(93,112,127,0.1)', color: 'text.secondary' }} />
                         {edu.badge && (
-                          <Chip label={edu.badge} size="small" variant="outlined" sx={{ fontSize: '0.65rem', borderColor: 'rgba(249,115,22,0.3)', color: '#f97316' }} />
+                          <Chip label={edu.badge} size="small" variant="outlined" sx={{ fontSize: '0.6rem', height: 22, borderColor: 'rgba(249,115,22,0.3)', color: '#f97316' }} />
                         )}
                       </div>
                     </BentoCard>
@@ -544,22 +490,22 @@ const App: React.FC = () => {
 
             {/* === FAQ TAB === */}
             {activeTab === 'faq' && (
-              <div>
-                <div className="mb-6 sm:mb-10">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+              <div className="flex-1 flex flex-col">
+                <div className="mb-4">
+                  <h2 className="text-lg sm:text-xl font-semibold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                     FAQ
                   </h2>
-                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                  <p className="text-xs sm:text-sm" style={{ color: 'var(--brand-slate-light)' }}>
                     Common questions answered
                   </p>
                 </div>
-                <div className="max-w-3xl space-y-3">
+                <div className="flex-1 max-w-3xl space-y-2.5">
                   {FAQ_ITEMS.map((faq, i) => (
                     <Accordion
                       key={i}
                       className="bento-animate"
                       sx={{
-                        borderRadius: '16px !important',
+                        borderRadius: '12px !important',
                         border: '1px solid',
                         borderColor: isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)',
                         backdropFilter: 'blur(12px)',
@@ -570,19 +516,21 @@ const App: React.FC = () => {
                       disableGutters
                     >
                       <AccordionSummary
-                        expandIcon={<ChevronRight size={16} style={{ color: '#f97316', transition: 'transform 0.2s' }} />}
+                        expandIcon={<ChevronRight size={14} style={{ color: '#f97316', transition: 'transform 0.2s' }} />}
                         sx={{
-                          px: { xs: 2, sm: 3 },
+                          px: { xs: 2, sm: 2.5 },
+                          minHeight: '40px !important',
+                          '& .MuiAccordionSummary-content': { my: '8px !important' },
                           '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': { transform: 'rotate(90deg)' },
                         }}
                       >
-                        <span className="flex items-center gap-2.5">
-                          <HelpCircle size={16} style={{ color: '#f97316', flexShrink: 0 }} />
-                          <span className="text-[13px] sm:text-sm font-medium">{faq.question}</span>
+                        <span className="flex items-center gap-2">
+                          <HelpCircle size={14} style={{ color: '#f97316', flexShrink: 0 }} />
+                          <span className="text-xs sm:text-[13px] font-medium">{faq.question}</span>
                         </span>
                       </AccordionSummary>
-                      <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: 2.5 }}>
-                        <p className="text-xs sm:text-[13px] leading-relaxed pl-7" style={{ color: 'var(--brand-slate-light)' }}>
+                      <AccordionDetails sx={{ px: { xs: 2, sm: 2.5 }, pb: 2 }}>
+                        <p className="text-[11px] sm:text-xs leading-relaxed pl-6" style={{ color: 'var(--brand-slate-light)' }}>
                           {faq.answer}
                         </p>
                       </AccordionDetails>
@@ -594,24 +542,24 @@ const App: React.FC = () => {
 
             {/* === CONTACT TAB === */}
             {activeTab === 'contact' && (
-              <div className="flex flex-col items-center justify-center min-h-[60vh]">
+              <div className="flex-1 flex flex-col items-center justify-center">
                 <div className="w-full max-w-lg">
-                  <div className="mb-6 sm:mb-10 text-center">
-                    <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                  <div className="mb-4 text-center">
+                    <h2 className="text-lg sm:text-xl font-semibold mb-0.5" style={{ color: 'var(--brand-light)' }}>
                       Get in touch
                     </h2>
-                    <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                    <p className="text-xs sm:text-sm" style={{ color: 'var(--brand-slate-light)' }}>
                       Let's discuss your next project
                     </p>
                   </div>
 
-                  <BentoCard hover={false} className="bento-animate">
+                  <BentoCard hover={false} className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
                     <form onSubmit={handleContactSubmit}>
                       {CONTACT_STEPS.map((step, i) => {
                         if (contactStep !== i + 1) return null;
                         const isTextarea = step.id === 'message';
                         return (
-                          <div key={step.id} className="space-y-5 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
+                          <div key={step.id} className="space-y-4 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
                             <label htmlFor={`contact-${step.id}`} className="block text-sm font-medium" style={{ color: 'var(--brand-light)' }}>
                               {step.label}
                             </label>
@@ -629,7 +577,7 @@ const App: React.FC = () => {
                                   }
                                 }}
                                 multiline
-                                minRows={4}
+                                minRows={3}
                                 fullWidth
                                 variant="outlined"
                                 size="small"
@@ -651,36 +599,17 @@ const App: React.FC = () => {
                         );
                       })}
 
-                      <div className="flex items-center justify-between gap-3 mt-6 pt-4" style={{ borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)'}` }}>
-                        <Button
-                          variant="text"
-                          size="small"
-                          onClick={handleContactBack}
-                          sx={{ visibility: contactStep === 1 ? 'hidden' : 'visible', minHeight: 40 }}
-                        >
-                          Back
-                        </Button>
+                      <div className="flex items-center justify-between gap-3 mt-5 pt-3" style={{ borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)'}` }}>
+                        <Button variant="text" size="small" onClick={handleContactBack} sx={{ visibility: contactStep === 1 ? 'hidden' : 'visible', minHeight: 36 }}>Back</Button>
                         <div className="flex items-center gap-2">
                           {[1, 2, 3].map((n) => (
-                            <span
-                              key={n}
-                              className="w-1.5 h-1.5 rounded-full transition-colors"
-                              style={{ backgroundColor: contactStep >= n ? '#f97316' : (isDark ? 'rgba(93,112,127,0.4)' : 'rgba(93,112,127,0.25)') }}
-                            />
+                            <span key={n} className="w-1.5 h-1.5 rounded-full transition-colors" style={{ backgroundColor: contactStep >= n ? '#f97316' : (isDark ? 'rgba(93,112,127,0.4)' : 'rgba(93,112,127,0.25)') }} />
                           ))}
                         </div>
                         {contactStep < 3 ? (
-                          <Button
-                            variant="contained"
-                            size="small"
-                            onClick={handleContactNext}
-                            disabled={(contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)}
-                            sx={{ minHeight: 40 }}
-                          >
-                            Next
-                          </Button>
+                          <Button variant="contained" size="small" onClick={handleContactNext} disabled={(contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)} sx={{ minHeight: 36 }}>Next</Button>
                         ) : (
-                          <Button type="submit" variant="contained" size="small" disabled={!canSubmit} sx={{ minHeight: 40 }}>
+                          <Button type="submit" variant="contained" size="small" disabled={!canSubmit} sx={{ minHeight: 36 }}>
                             Send <Send size={14} style={{ marginLeft: 6 }} />
                           </Button>
                         )}
@@ -688,7 +617,7 @@ const App: React.FC = () => {
                     </form>
                   </BentoCard>
 
-                  <p className="mt-5 text-center text-xs" style={{ color: 'var(--brand-slate-light)' }}>
+                  <p className="mt-3 text-center text-[10px] sm:text-xs" style={{ color: 'var(--brand-slate-light)' }}>
                     Opens your email client
                     <span className="mx-2 opacity-40">·</span>
                     <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: '#f97316' }}>{CONTACT_EMAIL}</a>
@@ -697,35 +626,35 @@ const App: React.FC = () => {
               </div>
             )}
           </div>
-
-          {/* Footer */}
-          <footer
-            className="px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px]"
-            style={{
-              borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.15)' : 'rgba(93,112,127,0.1)'}`,
-              color: 'var(--brand-slate-light)',
-              backgroundColor: isDark ? 'rgba(15,17,23,0.6)' : 'rgba(244,246,249,0.6)',
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            <div className="flex items-center gap-4">
-              <span style={{ color: 'var(--brand-light)', opacity: 0.7 }}>© 2025 Usama Shafique</span>
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck size={12} style={{ color: '#f97316', opacity: 0.7 }} /> Stable
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <div className={`w-1.5 h-1.5 rounded-full ${isTyping ? 'animate-pulse' : ''}`} style={{ backgroundColor: isTyping ? '#f97316' : 'rgba(93,112,127,0.5)' }} />
-                {isTyping ? 'AI Active' : 'Ready'}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: online ? '#22c55e' : '#ef4444' }} />
-                {online ? 'Online' : 'Offline'}
-              </span>
-            </div>
-          </footer>
         </div>
+
+        {/* Footer — pinned at bottom, never scrolls */}
+        <footer
+          className="shrink-0 px-4 sm:px-6 py-2 flex flex-col sm:flex-row items-center justify-between gap-1 text-[10px] sm:text-[11px]"
+          style={{
+            borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.15)' : 'rgba(93,112,127,0.1)'}`,
+            color: 'var(--brand-slate-light)',
+            backgroundColor: isDark ? 'rgba(15,17,23,0.6)' : 'rgba(244,246,249,0.6)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <span style={{ color: 'var(--brand-light)', opacity: 0.7 }}>© 2025 Usama Shafique</span>
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck size={11} style={{ color: '#f97316', opacity: 0.7 }} /> Stable
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5">
+              <div className={`w-1.5 h-1.5 rounded-full ${isTyping ? 'animate-pulse' : ''}`} style={{ backgroundColor: isTyping ? '#f97316' : 'rgba(93,112,127,0.5)' }} />
+              {isTyping ? 'AI Active' : 'Ready'}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: online ? '#22c55e' : '#ef4444' }} />
+              {online ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        </footer>
       </main>
 
       <Analytics />

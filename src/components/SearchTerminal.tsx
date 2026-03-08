@@ -27,24 +27,24 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-full flex flex-col flex-1 min-h-[calc(100vh-8rem)]">
+    <div className="w-full flex flex-col flex-1">
       {/* Hero */}
-      <div className="flex-1 flex flex-col items-center justify-center pt-8 pb-4">
+      <div className="flex-1 flex flex-col items-center justify-center pb-2">
         <h1
-          className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold mb-3 opacity-0 animate-fade-in-up"
+          className="text-center text-xl sm:text-2xl md:text-3xl font-semibold mb-2 opacity-0 animate-fade-in-up"
           style={{ animationFillMode: 'forwards', color: 'var(--brand-light)' }}
         >
           What can I help you with?
         </h1>
         <p
-          className="text-center text-sm mb-8 sm:mb-10 opacity-0 animate-fade-in-up"
+          className="text-center text-xs sm:text-sm mb-4 sm:mb-6 opacity-0 animate-fade-in-up"
           style={{ animationDelay: '80ms', animationFillMode: 'forwards', color: 'var(--brand-slate-light)' }}
         >
           Ask me about my projects, stack, and experience
         </p>
 
         {/* Capability bento cards */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-lg">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 w-full max-w-lg">
           {CAPABILITIES.map((cap, i) => (
             <BentoCard
               key={i}
@@ -129,7 +129,7 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
       )}
 
       {/* Input bar */}
-      <div className="w-full max-w-xl mx-auto pt-2 pb-2">
+      <div className="w-full max-w-xl mx-auto pt-1 pb-1 shrink-0">
         <div
           className="rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
           style={{
