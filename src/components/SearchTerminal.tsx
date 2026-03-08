@@ -1,5 +1,9 @@
 import { ArrowRight, Mic, RotateCcw, Sparkles, Zap } from 'lucide-react';
 import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { CAPABILITIES } from '../constants';
 
 interface SearchTerminalProps {
@@ -28,108 +32,104 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   return (
     <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full min-w-0 py-5 sm:py-8 px-3 sm:px-1 box-border">
       <div className="text-center mb-4 sm:mb-8 opacity-0 animate-fade-in-up [animation-fill-mode:forwards]">
-        <h1 className="font-mono text-xl sm:text-3xl font-medium text-[#ecebf3] mb-1.5 sm:mb-2 leading-tight px-1">
-          Ask Me Anything <Sparkles className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-[#f97316] ml-0.5 sm:ml-1" />
+        <h1 className="text-xl sm:text-3xl font-medium text-foreground mb-1.5 sm:mb-2 leading-tight px-1 flex items-center justify-center gap-2">
+          Ask Me Anything <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
         </h1>
-        <p className="font-mono text-[var(--brand-slate-light)] text-xs sm:text-base px-2 sm:px-1">Instant Answers About My Work, Projects, And Experience</p>
+        <p className="text-muted-foreground text-xs sm:text-base px-2 sm:px-1">Instant Answers About My Work, Projects, And Experience</p>
       </div>
 
-      <div className="relative group mb-6 sm:mb-10 w-full max-w-full overflow-hidden">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-[#f97316]/20 to-[#5d707f]/10 rounded-xl opacity-40 group-hover:opacity-70 transition-opacity"></div>
-        <div className="relative rounded-xl p-2 sm:p-1 shadow-2xl focus-within:border-[#f97316]/50 focus-within:shadow-[#f97316]/10 focus-within:shadow-2xl transition-all duration-300 bg-[var(--brand-bg)] border border-[#5d707f]/40 overflow-hidden">
-          <div className="flex flex-col min-w-0">
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Ask about my work, projects or experience..."
-              className="font-mono bg-transparent border-none outline-none px-4 py-3.5 sm:py-3 text-[16px] sm:text-[14px] w-full min-w-0 text-[#ecebf3] placeholder:text-[var(--brand-slate-light)] placeholder:truncate transition-colors touch-manipulation box-border"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              aria-label="Ask a question about Usama"
-            />
-            <div className="grid grid-cols-1 sm:flex sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 border-t border-[#5d707f]/40 mt-1 pt-3 sm:pt-2 pb-2 sm:pb-1.5 px-2 sm:px-2">
-              <div className="flex items-center gap-1.5 bg-[#5d707f]/20 rounded-full px-2.5 py-1 border border-[#5d707f]/40 w-fit shrink-0">
-                <Zap className="w-2.5 h-2.5 text-[#f97316] shrink-0" />
-                <span className="font-mono text-[10px] text-[var(--brand-slate-light)] tracking-wider hidden sm:inline">Groq</span>
-              </div>
-              <div className="grid grid-cols-[auto_auto_1fr] sm:flex sm:flex-row sm:items-center sm:justify-end gap-2 w-full sm:w-auto">
-                <button type="button" disabled title="Voice input coming soon" className="p-2 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--brand-slate-light)] opacity-60 cursor-not-allowed shrink-0 sm:min-w-0" aria-label="Voice input (coming soon)">
-                  <Mic className="w-4 h-4" />
-                </button>
-                <button type="button" onClick={onClear} className="p-2 hover:bg-[#5d707f]/30 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--brand-slate-light)] hover:text-[#f97316] transition-colors touch-manipulation shrink-0 sm:min-w-0" aria-label="Clear and start new question">
-                  <RotateCcw className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleSearch()}
-                  disabled={isTyping}
-                  className="font-mono bg-[#f97316] text-white px-4 py-3 rounded-lg text-[12px] min-h-[44px] flex-1 min-w-0 sm:flex-initial sm:flex-none sm:px-4 sm:py-1.5 sm:text-[11px] flex items-center justify-center gap-2 hover:bg-[#ea580c] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 shadow-lg shadow-[#f97316]/20 touch-manipulation"
-                >
-                  {isTyping ? "Processing" : "Run"}
-                  {isTyping ? (
-                    <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin shrink-0" />
-                  ) : (
-                    <ArrowRight className="w-4 h-4 shrink-0" />
-                  )}
-                </button>
-              </div>
+      <Card className="mb-6 sm:mb-10 border-border/60 shadow-xl focus-within:ring-2 focus-within:ring-primary/30 transition-all overflow-hidden">
+        <CardContent className="p-0">
+          <Input
+            ref={inputRef}
+            placeholder="Ask about my work, projects or experience..."
+            className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-t-xl rounded-b-none px-4 py-3.5 sm:py-3 text-base sm:text-sm h-auto"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            aria-label="Ask a question about Usama"
+          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 border-t border-border/60">
+            <Badge variant="secondary" className="w-fit gap-1.5">
+              <Zap className="w-2.5 h-2.5 text-primary" />
+              <span className="hidden sm:inline">Groq</span>
+            </Badge>
+            <div className="grid grid-cols-[auto_auto_1fr] sm:flex gap-2">
+              <Button variant="ghost" size="icon" disabled className="opacity-60" aria-label="Voice (coming soon)">
+                <Mic className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={onClear} aria-label="Clear">
+                <RotateCcw className="w-4 h-4" />
+              </Button>
+              <Button onClick={() => handleSearch()} disabled={isTyping} className="flex-1 sm:flex-initial">
+                {isTyping ? (
+                  <>
+                    Processing
+                    <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Run <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </Button>
             </div>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
         {(aiResponse || isTyping) && (
-          <div className="mt-4 p-4 sm:p-5 rounded-xl opacity-0 animate-fade-in-down [animation-fill-mode:forwards] shadow-xl relative bg-[var(--brand-bg)] border border-[#5d707f]/40">
-            <div className="absolute top-2 right-4 font-mono text-[10px] text-[var(--brand-slate-light)]">Response Context</div>
-            <div className="flex gap-4">
-              <div className="w-7 h-7 shrink-0 bg-[#f97316] rounded flex items-center justify-center text-[9px] font-black text-white shadow-lg">✓</div>
-              <div className="flex-1" aria-live="polite" aria-atomic="true">
+          <Card className="mt-4 animate-fade-in-down shadow-xl">
+            <div className="p-4 pb-0">
+              <span className="text-xs text-muted-foreground">Response Context</span>
+            </div>
+            <div className="flex gap-4 p-4 pt-2">
+              <div className="w-7 h-7 shrink-0 bg-primary rounded flex items-center justify-center text-[9px] font-black text-primary-foreground shadow-lg">✓</div>
+              <div className="flex-1 min-w-0" aria-live="polite" aria-atomic="true">
                 {isTyping ? (
                   <div className="flex gap-1.5 items-center h-7">
-                    <span className="w-2 h-2 bg-[#f97316] rounded-full animate-typing-dot [animation-delay:0ms]" />
-                    <span className="w-2 h-2 bg-[#f97316] rounded-full animate-typing-dot [animation-delay:200ms]" />
-                    <span className="w-2 h-2 bg-[#f97316] rounded-full animate-typing-dot [animation-delay:400ms]" />
+                    <span className="w-2 h-2 bg-primary rounded-full animate-typing-dot [animation-delay:0ms]" />
+                    <span className="w-2 h-2 bg-primary rounded-full animate-typing-dot [animation-delay:200ms]" />
+                    <span className="w-2 h-2 bg-primary rounded-full animate-typing-dot [animation-delay:400ms]" />
                   </div>
                 ) : (
                   <>
-                    <p className="font-mono text-[#ecebf3] text-[13px] leading-relaxed whitespace-pre-wrap">{aiResponse}</p>
+                    <p className="text-foreground text-[13px] leading-relaxed whitespace-pre-wrap">{aiResponse}</p>
                     {chatError && (
                       <div className="mt-3">
-                        {chatErrorMessage && <p className="font-mono text-[11px] text-[var(--brand-slate-light)] mb-1">({chatErrorMessage})</p>}
-                        <button
-                          onClick={() => handleSearch(query)}
-                          className="text-[12px] text-[#f97316] hover:text-[#ea580c] underline"
-                        >
+                        {chatErrorMessage && <p className="text-muted-foreground text-[11px] mb-1">({chatErrorMessage})</p>}
+                        <Button variant="link" size="sm" className="h-auto p-0 text-primary" onClick={() => handleSearch(query)}>
                           Retry API
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </>
                 )}
               </div>
             </div>
-          </div>
+          </Card>
         )}
-      </div>
 
       <div className="opacity-0 animate-fade-in-up [animation-fill-mode:forwards] [animation-delay:300ms]">
-        <div className="flex items-center gap-3 mb-6">
-          <h3 className="font-mono text-[10px] text-[var(--brand-slate-light)] tracking-wide">Suggested Prompts</h3>
-          <div className="h-px flex-1 bg-[#5d707f]/40"></div>
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
+          <h3 className="text-[10px] text-muted-foreground tracking-wide uppercase">Suggested Prompts</h3>
+          <div className="h-px flex-1 bg-border/60" />
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 auto-rows-fr min-w-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 min-w-0">
           {CAPABILITIES.map((cap, i) => (
-            <button
+            <Button
               key={i}
-              onClick={() => { setQuery(cap.prompt); handleSearch(cap.prompt); }}
-              className="p-3 sm:p-3.5 rounded-xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-lg hover:shadow-[#f97316]/10 active:scale-[0.98] sm:hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group text-left opacity-0 animate-fade-in-up [animation-fill-mode:forwards] min-h-[76px] sm:min-h-0 touch-manipulation flex flex-col min-w-0"
+              variant="outline"
+              className="h-auto min-h-[76px] sm:min-h-0 py-3 sm:py-2 flex flex-col items-start justify-start text-left gap-1 hover:border-primary/50 hover:bg-primary/5 transition-all opacity-0 animate-fade-in-up [animation-fill-mode:forwards]"
               style={{ animationDelay: `${400 + i * 80}ms` }}
+              onClick={() => { setQuery(cap.prompt); handleSearch(cap.prompt); }}
             >
-              <div className="mb-2 group-hover:scale-110 transition-transform opacity-80">
-                {React.cloneElement(cap.icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4 text-[#f97316]' })}
+              <div className="opacity-80">
+                {React.cloneElement(cap.icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4 text-primary' })}
               </div>
-              <h4 className="font-mono font-medium mb-0.5 sm:mb-1 text-[#ecebf3] text-[9px] sm:text-[10px] tracking-wide break-words-mobile">{cap.title}</h4>
-              <p className="font-mono text-[9px] sm:text-[10px] text-[var(--brand-slate-light)] leading-snug line-clamp-2 break-words-mobile">{cap.description}</p>
-            </button>
+              <span className="font-medium text-[9px] sm:text-[10px]">{cap.title}</span>
+              <span className="text-muted-foreground text-[9px] sm:text-[10px] leading-snug line-clamp-2">{cap.description}</span>
+            </Button>
           ))}
         </div>
       </div>
