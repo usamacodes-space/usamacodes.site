@@ -30,15 +30,15 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   return (
     <div className="w-full flex flex-col flex-1">
       {/* Hero */}
-      <div className="flex-1 flex flex-col items-center justify-center pb-2">
+      <div className="flex-1 flex flex-col items-center justify-start pt-[12vh] sm:pt-[14vh] pb-2">
         <h1
-          className="text-center text-xl sm:text-2xl md:text-3xl font-semibold mb-2 opacity-0 animate-fade-in-up"
+          className="text-center text-xl sm:text-2xl md:text-3xl font-semibold mb-3 opacity-0 animate-fade-in-up"
           style={{ animationFillMode: 'forwards', color: 'var(--brand-light)' }}
         >
           What can I help you with?
         </h1>
         <p
-          className="text-center text-xs sm:text-sm mb-4 sm:mb-6 opacity-0 animate-fade-in-up"
+          className="text-center text-xs sm:text-sm mb-6 sm:mb-8 opacity-0 animate-fade-in-up"
           style={{ animationDelay: '80ms', animationFillMode: 'forwards', color: 'var(--brand-slate-light)' }}
         >
           Ask me about my projects, stack, and experience
