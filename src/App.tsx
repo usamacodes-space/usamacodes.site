@@ -3,30 +3,32 @@ import gsap from 'gsap';
 import {
   Activity,
   Briefcase,
+  ChevronRight,
+  Code2,
+  GraduationCap,
   HelpCircle,
-  Menu,
+  MapPin,
   Send,
   Settings,
   ShieldCheck,
-  X
+  X,
 } from 'lucide-react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { BentoCard } from './components/BentoCard';
 import { ChatErrorBoundary } from './components/ChatErrorBoundary';
+import { Header } from './components/Header';
 import { ProjectCard } from './components/ProjectCard';
 import { SearchTerminal } from './components/SearchTerminal';
-import { Sidebar } from './components/Sidebar';
-import { CONTACT_EMAIL, EDUCATION, EXPERIENCE, FAQ_ITEMS, PROJECTS } from './constants';
-import { useLenis } from './hooks/useLenis';
+import { CONTACT_EMAIL, EDUCATION, EXPERIENCE, FAQ_ITEMS, PROJECTS, SOCIAL_LINKS } from './constants';
+import { useTheme } from './contexts/ThemeContext';
 import { useOnline } from './hooks/useOnline';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import { queryPortfolio } from './services/chat';
@@ -36,34 +38,16 @@ const Snowfall = React.lazy(() => import('./components/Snowfall').then((m) => ({
 
 gsap.registerPlugin(useGSAP);
 
-const SignalNode: React.FC = () => (
-  <div className="relative flex items-center justify-center w-8 h-8">
-    <div className="absolute w-full h-full border border-[#5d707f]/30 rounded-full border-t-[#f97316]/60 animate-[spin_8s_linear_infinite]"></div>
-    <div className="absolute w-[70%] h-[70%] border border-[#5d707f]/40 rounded-full border-b-[#f97316]/50 animate-[spin_4s_linear_infinite_reverse]"></div>
-    <div className="absolute w-[40%] h-[40%] border border-[#f97316]/30 rounded-full animate-pulse"></div>
-    <div className="relative w-1.5 h-1.5 bg-[#f97316] rounded-full shadow-[0_0_12px_rgba(249,115,22,0.8)] z-10">
-      <div className="absolute inset-0 bg-[#f97316] rounded-full animate-ping opacity-30"></div>
-    </div>
-  </div>
-);
-
-const TAB_IDS = ['start', 'projects', 'experience', 'education', 'faq', 'contact'];
-
-const MOBILE_BREAKPOINT = 768;
-
-function getInitialSidebarOpen(): boolean {
-  if (typeof window === 'undefined') return true;
-  return window.innerWidth >= MOBILE_BREAKPOINT;
-}
+const TAB_IDS = ['start', 'about', 'projects', 'experience', 'education', 'faq', 'contact'];
 
 const App: React.FC = () => {
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('start');
   const [query, setQuery] = useState('');
   const [aiResponse, setAiResponse] = useState<string | null>(null);
   const [chatError, setChatError] = useState(false);
   const [chatErrorMessage, setChatErrorMessage] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(getInitialSidebarOpen);
   const [isSnowing, setIsSnowing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -78,6 +62,7 @@ const App: React.FC = () => {
     setShowSettings(false);
     requestAnimationFrame(() => { previousFocusRef.current?.focus({ preventScroll: true }); });
   }, []);
+
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactMessage, setContactMessage] = useState('');
@@ -86,11 +71,14 @@ const App: React.FC = () => {
   const online = useOnline();
   const reducedMotion = useReducedMotion();
   const contentRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const projectsRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const CONTACT_STEPS = [
-    { id: 'name', label: "What's Your Name?", value: contactName, setValue: setContactName, placeholder: "Type Your Name..." },
-    { id: 'email', label: "What's Your Email?", value: contactEmail, setValue: setContactEmail, placeholder: "Your@Email.com" },
-    { id: 'message', label: "What Would You Like To Tell Me?", value: contactMessage, setValue: setContactMessage, placeholder: "Tell Me About Your Project..." },
+    { id: 'name', label: "What's your name?", value: contactName, setValue: setContactName, placeholder: "Your name..." },
+    { id: 'email', label: "What's your email?", value: contactEmail, setValue: setContactEmail, placeholder: "you@email.com" },
+    { id: 'message', label: "Tell me about your project", value: contactMessage, setValue: setContactMessage, placeholder: "I'd like to discuss..." },
   ] as const;
 
   const handleContactSubmit = (e: React.FormEvent) => {
@@ -115,21 +103,15 @@ const App: React.FC = () => {
     if (contactStep > 1) setContactStep((s) => s - 1);
   };
 
-  const mainRef = useRef<HTMLElement>(null);
-  const projectsRef = useRef<HTMLDivElement>(null);
-  const lenisRef = useLenis(mainRef);
-  useEffect(() => {
-    requestAnimationFrame(() => lenisRef.current?.resize());
-  }, [activeTab, lenisRef]);
-
   useGSAP(
     () => {
-      if (activeTab !== 'projects' || !projectsRef.current) return;
-      const cards = projectsRef.current.querySelectorAll('.project-card-wrap');
+      if (!sectionRef.current) return;
+      const cards = sectionRef.current.querySelectorAll('.bento-animate');
+      if (!cards.length) return;
       gsap.fromTo(
         cards,
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out' }
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out' }
       );
     },
     { dependencies: [activeTab] }
@@ -161,33 +143,6 @@ const App: React.FC = () => {
     contentRef.current?.focus({ preventScroll: true });
   }, [activeTab]);
 
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false);
-
-  useEffect(() => {
-    const onResize = () => {
-      const mobile = window.innerWidth < MOBILE_BREAKPOINT;
-      setIsMobile(mobile);
-      setSidebarOpen(!mobile);
-    };
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-  const handleSetActiveTab = useCallback((id: string) => {
-    setActiveTab(id);
-    if (isMobile) setSidebarOpen(false);
-  }, [isMobile]);
-
-  useEffect(() => {
-    if (!isMobile || !sidebarOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSidebarOpen(false);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isMobile, sidebarOpen]);
-
   useEffect(() => {
     if (!showSettings || !settingsModalRef.current) return;
     const modal = settingsModalRef.current;
@@ -211,242 +166,453 @@ const App: React.FC = () => {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === '/') {
-        e.preventDefault();
-        setActiveTab('start');
-        return;
-      }
+      if (e.key === '/') { e.preventDefault(); setActiveTab('start'); return; }
       const num = parseInt(e.key, 10);
-      if (num >= 1 && num <= 6) {
-        e.preventDefault();
-        setActiveTab(TAB_IDS[num - 1]);
-      }
+      if (num >= 1 && num <= 7) { e.preventDefault(); setActiveTab(TAB_IDS[num - 1]); }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
   const showSnow = isSnowing && !reducedMotion;
+  const isDark = theme === 'dark';
 
   return (
-    <div className="flex h-screen overflow-hidden select-none relative text-sm" style={{ backgroundColor: '#0f1117' }}>
+    <div
+      className="flex flex-col h-screen overflow-hidden select-none relative"
+      style={{ backgroundColor: isDark ? '#0f1117' : '#f4f6f9', color: isDark ? '#ecebf3' : '#1a1d24' }}
+    >
       <React.Suspense fallback={null}>
         <ThreeScene />
         {showSnow && <Snowfall />}
       </React.Suspense>
 
+      {/* Settings modal */}
       {showSettings && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fade-in" role="presentation">
-          <div ref={settingsModalRef} className="rounded-xl w-full max-w-sm shadow-2xl animate-scale-in overflow-hidden bg-card border border-border" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-            <div className="p-4 border-b border-border flex items-center justify-between">
+          <div
+            ref={settingsModalRef}
+            className="rounded-2xl w-full max-w-sm shadow-2xl animate-scale-in overflow-hidden"
+            style={{
+              backgroundColor: isDark ? '#161b22' : '#ffffff',
+              border: `1px solid ${isDark ? 'rgba(93,112,127,0.25)' : 'rgba(93,112,127,0.15)'}`,
+            }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="settings-title"
+          >
+            <div className="p-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)'}` }}>
               <div className="flex items-center gap-2">
-                <Settings className="w-4 h-4 text-primary" />
-                <h3 id="settings-title" className="text-sm font-medium text-foreground tracking-wide">System parameters</h3>
+                <Settings size={16} style={{ color: '#f97316' }} />
+                <h3 id="settings-title" className="text-sm font-semibold">Settings</h3>
               </div>
-              <Button variant="text" size="small" onClick={closeSettings} aria-label="Close" sx={{ minWidth: 36, minHeight: 36 }}><X className="w-4 h-4" style={{ color: '#b5c1d2' }} /></Button>
+              <Button variant="text" size="small" onClick={closeSettings} aria-label="Close" sx={{ minWidth: 36, minHeight: 36, color: 'text.secondary' }}>
+                <X size={16} />
+              </Button>
             </div>
             <div className="p-5 space-y-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] font-medium text-foreground">AI Reasoning Core</div>
-                  <div className="text-xs text-muted-foreground">Simulated Processing Delay</div>
+                  <div className="text-[13px] font-medium">AI Reasoning Delay</div>
+                  <div className="text-xs" style={{ color: isDark ? '#b5c1d2' : '#6b7c8d' }}>Simulated processing time</div>
                 </div>
-                <button onClick={() => setThinkerMode(!thinkerMode)} className={`w-8 h-4 rounded-full relative transition-colors ${thinkerMode ? 'bg-[#f97316]' : 'bg-[#5d707f]/30'}`}><div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${thinkerMode ? 'left-4.5' : 'left-0.5'}`} /></button>
+                <button
+                  onClick={() => setThinkerMode(!thinkerMode)}
+                  className="w-9 h-5 rounded-full relative transition-colors"
+                  style={{ backgroundColor: thinkerMode ? '#f97316' : (isDark ? 'rgba(93,112,127,0.3)' : 'rgba(93,112,127,0.2)') }}
+                >
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${thinkerMode ? 'left-[18px]' : 'left-0.5'}`} />
+                </button>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] font-medium text-foreground">Global Atmosphere</div>
-                  <div className="text-xs text-muted-foreground">Seasonal Particle Effects</div>
+                  <div className="text-[13px] font-medium">Snow Effect</div>
+                  <div className="text-xs" style={{ color: isDark ? '#b5c1d2' : '#6b7c8d' }}>Seasonal particle overlay</div>
                 </div>
-                <button onClick={() => setIsSnowing(!isSnowing)} className={`w-8 h-4 rounded-full relative transition-colors ${isSnowing ? 'bg-[#f97316]' : 'bg-[#5d707f]/30'}`}><div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${isSnowing ? 'left-4.5' : 'left-0.5'}`} /></button>
+                <button
+                  onClick={() => setIsSnowing(!isSnowing)}
+                  className="w-9 h-5 rounded-full relative transition-colors"
+                  style={{ backgroundColor: isSnowing ? '#f97316' : (isDark ? 'rgba(93,112,127,0.3)' : 'rgba(93,112,127,0.2)') }}
+                >
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${isSnowing ? 'left-[18px]' : 'left-0.5'}`} />
+                </button>
               </div>
             </div>
-            <div className="p-3 bg-muted/50 rounded-b-xl flex justify-end">
-              <Button onClick={closeSettings} variant="contained" size="small">Execute</Button>
+            <div className="p-3 flex justify-end" style={{ backgroundColor: isDark ? 'rgba(93,112,127,0.08)' : 'rgba(93,112,127,0.05)' }}>
+              <Button onClick={closeSettings} variant="contained" size="small">Done</Button>
             </div>
           </div>
         </div>
       )}
 
-      {isMobile && sidebarOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden
-          />
-          <Sidebar
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            activeTab={activeTab}
-            setActiveTab={handleSetActiveTab}
-            isSnowing={isSnowing}
-            setIsSnowing={setIsSnowing}
-            onOpenSettings={openSettings}
-            overlay
-          />
-        </div>
-      )}
-      {!isMobile && (
-        <Sidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          isSnowing={isSnowing}
-          setIsSnowing={setIsSnowing}
-          onOpenSettings={openSettings}
-        />
-      )}
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        isSnowing={isSnowing}
+        setIsSnowing={setIsSnowing}
+        onOpenSettings={openSettings}
+      />
 
-      <main id="main-content" ref={mainRef} tabIndex={-1} className="flex-1 flex flex-col relative overflow-x-hidden overflow-y-auto md:overflow-hidden z-10 lenis lenis-smooth pb-8 md:pb-0" aria-label="Main content">
-        <div ref={contentRef} className="lenis-content flex flex-col min-h-full h-max flex-shrink-0" tabIndex={-1}>
-          {!sidebarOpen && (
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute top-3 left-3 sm:top-4 sm:left-4 z-30 bg-background/95 border-border shadow-lg"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5 text-primary" />
-            </Button>
-          )}
+      <main
+        id="main-content"
+        ref={mainRef}
+        tabIndex={-1}
+        className="flex-1 overflow-x-hidden overflow-y-auto z-10"
+        aria-label="Main content"
+      >
+        <div ref={contentRef} tabIndex={-1}>
+          <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 
-          <div className={`max-w-4xl mx-auto w-full py-5 sm:py-10 flex flex-col items-center min-h-[calc(100vh-5rem)] md:min-h-full flex-1 ${!sidebarOpen ? 'pl-14 pr-4 sm:pl-16 sm:pr-6 md:pl-8 md:pr-8' : 'px-4 sm:px-6 md:px-8'}`}>
-          {activeTab === 'start' && (
-            <ChatErrorBoundary onRetry={() => handleSearch(query)}>
-              <SearchTerminal
-                query={query}
-                setQuery={setQuery}
-                handleSearch={handleSearch}
-                onClear={() => { setQuery(''); setAiResponse(null); setChatError(false); setChatErrorMessage(null); }}
-                aiResponse={aiResponse}
-                isTyping={isTyping}
-                chatError={chatError}
-                chatErrorMessage={chatErrorMessage}
-              />
-            </ChatErrorBoundary>
-          )}
+            {/* === START TAB === */}
+            {activeTab === 'start' && (
+              <ChatErrorBoundary onRetry={() => handleSearch(query)}>
+                <SearchTerminal
+                  query={query}
+                  setQuery={setQuery}
+                  handleSearch={handleSearch}
+                  onClear={() => { setQuery(''); setAiResponse(null); setChatError(false); setChatErrorMessage(null); }}
+                  aiResponse={aiResponse}
+                  isTyping={isTyping}
+                  chatError={chatError}
+                  chatErrorMessage={chatErrorMessage}
+                />
+              </ChatErrorBoundary>
+            )}
 
-          {activeTab === 'projects' && (
-            <div className="projects-panel w-full min-w-0 px-1 sm:px-0" ref={projectsRef}>
-              <div className="grid grid-cols-1 sm:flex sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-5 sm:mb-10">
-                <div className="min-w-0">
-                  <h2 className="text-lg sm:text-xl font-medium text-foreground mb-0.5 sm:mb-1 tracking-wide">Build pipeline</h2>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground break-words-mobile">Technical Prototypes And Production-Grade Applications</p>
+            {/* === ABOUT TAB === */}
+            {activeTab === 'about' && (
+              <div>
+                <div className="mb-6 sm:mb-10">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                    About Me
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                    Get to know me and what I do
+                  </p>
                 </div>
-                <Chip label="Version: Latest" size="small" sx={{ fontSize: '0.65rem' }} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 auto-rows-fr">
-                {PROJECTS.map((p, i) => (
-                  <div key={i} className="project-card-wrap">
-                    <ProjectCard project={p} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {activeTab === 'experience' && (
-            <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] max-w-2xl mx-auto w-full px-1 sm:px-0">
-              <div className="text-center mb-6 sm:mb-8 md:mb-12">
-                 <h2 className="text-xl font-medium text-foreground tracking-wide">Protocol trace</h2>
-                 <p className="text-xs text-muted-foreground mt-1">System Event Log</p>
-              </div>
-
-              <div className="relative">
-                <div className="absolute left-[32px] sm:left-[48px] top-[20px] bottom-4 w-[1px] border-l border-dashed border-[#5d707f]/50 hidden md:block"></div>
-                <div className="relative grid grid-cols-1 gap-5 sm:gap-6 md:gap-12">
-                  {EXPERIENCE.map((exp, idx) => (
-                    <div key={idx} className="relative flex flex-col md:flex-row md:items-start gap-3 sm:gap-4 md:gap-8">
-                      <div className="md:mt-1 z-10 shrink-0 w-20 sm:w-24 flex justify-center md:justify-center">
-                        <SignalNode />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-4xl">
+                  {/* Profile card - spans 2 cols on desktop */}
+                  <BentoCard className="bento-animate md:col-span-2">
+                    <div className="flex flex-col sm:flex-row items-start gap-5">
+                      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2" style={{ borderColor: 'rgba(249, 115, 22, 0.3)' }}>
+                        <img
+                          src="/avatar.jpg"
+                          alt="Usama Shafique"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const t = e.target as HTMLImageElement;
+                            if (!t.src.includes('ui-avatars.com'))
+                              t.src = 'https://ui-avatars.com/api/?name=Usama+Shafique&size=128&background=0f1117&color=f97316';
+                          }}
+                        />
                       </div>
-                      <Card className="flex-1 min-w-0 p-4 sm:p-6 hover:border-primary/50 transition-all duration-300 group">
-                        <CardContent className="p-0">
-                        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
-                          <div className="flex gap-3 sm:gap-4 min-w-0">
-                            <div className="p-2 sm:p-2.5 bg-muted rounded-lg border border-border group-hover:border-primary/50 transition-colors shrink-0">
-                              <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-                            </div>
-                            <div className="min-w-0">
-                              <h3 className="text-sm font-medium text-foreground tracking-tight break-words-mobile">{exp.role}</h3>
-                              <p className="text-primary text-[10px] sm:text-[11px] break-words-mobile">{exp.company}</p>
-                            </div>
-                          </div>
-                          <Chip icon={<Activity className="w-3 h-3 animate-pulse" />} label={exp.period} size="small" color="primary" sx={{ fontSize: '0.65rem' }} />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-bold mb-1" style={{ color: 'var(--brand-light)' }}>
+                          Usama Shafique
+                        </h3>
+                        <p className="text-sm font-medium mb-3" style={{ color: '#f97316' }}>
+                          Backend & AI-Integrated Software Engineer
+                        </p>
+                        <p className="text-xs sm:text-[13px] leading-relaxed" style={{ color: 'var(--brand-slate-light)' }}>
+                          Backend Software Engineer experienced in building AI-integrated Node.js systems using NestJS, PostgreSQL, and Docker. Skilled in developing scalable REST APIs, authentication systems, and real-time features with Socket.io. Passionate about using tools like LangChain, FastAPI, and Ollama to bring AI automation into production systems.
+                        </p>
+                      </div>
+                    </div>
+                  </BentoCard>
+
+                  {/* Location card */}
+                  <BentoCard className="bento-animate">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div
+                        className="p-2.5 rounded-xl shrink-0"
+                        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+                      >
+                        <MapPin size={18} style={{ color: '#f97316' }} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>Location</h4>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--brand-slate-light)' }}>Stoke-on-Trent, England, UK</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="p-2.5 rounded-xl shrink-0"
+                        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+                      >
+                        <Send size={18} style={{ color: '#f97316' }} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>Email</h4>
+                        <a href={`mailto:${CONTACT_EMAIL}`} className="text-xs mt-0.5 hover:underline" style={{ color: '#f97316' }}>
+                          {CONTACT_EMAIL}
+                        </a>
+                      </div>
+                    </div>
+                  </BentoCard>
+
+                  {/* Skills card */}
+                  <BentoCard className="bento-animate md:col-span-2">
+                    <div className="flex items-center gap-2.5 mb-4">
+                      <div
+                        className="p-2.5 rounded-xl shrink-0"
+                        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+                      >
+                        <Code2 size={18} style={{ color: '#f97316' }} />
+                      </div>
+                      <h4 className="font-semibold text-sm" style={{ color: 'var(--brand-light)' }}>Tech Stack & Skills</h4>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {['NestJS', 'Node.js', 'PostgreSQL', 'Docker', 'Socket.io', 'LangChain', 'FastAPI', 'Ollama', 'Prisma', 'React', 'Next.js', 'Tailwind CSS', 'TypeScript', 'Python', 'REST API', 'JWT/RBAC', 'Redis', 'Git'].map((skill) => (
+                        <Chip
+                          key={skill}
+                          label={skill}
+                          size="small"
+                          sx={{
+                            fontSize: '0.7rem',
+                            bgcolor: isDark ? 'rgba(249,115,22,0.08)' : 'rgba(249,115,22,0.06)',
+                            color: isDark ? '#e0cfc2' : '#6b4c30',
+                            border: '1px solid',
+                            borderColor: isDark ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.15)',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </BentoCard>
+
+                  {/* Social / Connect card */}
+                  <BentoCard className="bento-animate">
+                    <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--brand-light)' }}>Connect</h4>
+                    <div className="space-y-2.5">
+                      {SOCIAL_LINKS.map((link) => (
+                        <a
+                          key={link.label}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors"
+                          style={{
+                            color: isDark ? '#b5c1d2' : '#4a5568',
+                            backgroundColor: isDark ? 'rgba(93,112,127,0.06)' : 'rgba(93,112,127,0.04)',
+                            border: `1px solid ${isDark ? 'rgba(93,112,127,0.12)' : 'rgba(93,112,127,0.08)'}`,
+                          }}
+                        >
+                          <span style={{ color: '#f97316' }}>
+                            {React.cloneElement(link.icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4' })}
+                          </span>
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  </BentoCard>
+
+                  {/* Quick facts */}
+                  <BentoCard className="bento-animate md:col-span-3">
+                    <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--brand-light)' }}>Quick Facts</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {[
+                        { label: 'Experience', value: '2+ Years' },
+                        { label: 'Degree', value: 'MSc AI & Data Science' },
+                        { label: 'Focus', value: 'Backend & AI' },
+                        { label: 'Availability', value: 'Remote / Hybrid' },
+                      ].map((fact) => (
+                        <div key={fact.label} className="text-center">
+                          <div className="text-base sm:text-lg font-bold" style={{ color: '#f97316' }}>{fact.value}</div>
+                          <div className="text-[11px] mt-1" style={{ color: 'var(--brand-slate-light)' }}>{fact.label}</div>
                         </div>
-                        <ul className="space-y-2 sm:space-y-3 pl-1">
-                          {exp.highlights.map((bullet, i) => (
-                            <li key={i} className="text-muted-foreground text-[11px] flex gap-2 sm:gap-3 leading-relaxed break-words-mobile">
-                              <span className="text-primary opacity-80">::</span>{bullet}
-                            </li>
-                          ))}
-                        </ul>
-                        </CardContent>
-                      </Card>
+                      ))}
+                    </div>
+                  </BentoCard>
+                </div>
+              </div>
+            )}
+
+            {/* === PROJECTS TAB === */}
+            {activeTab === 'projects' && (
+              <div ref={projectsRef}>
+                <div className="mb-6 sm:mb-10">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                    Projects
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                    Technical prototypes and production-grade applications
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                  {PROJECTS.map((p, i) => (
+                    <div key={i} className="bento-animate project-card-wrap">
+                      <ProjectCard project={p} featured={i === 0} />
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === 'education' && (
-            <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] max-w-2xl mx-auto w-full px-1 sm:px-0">
-              <h2 className="text-xl font-medium text-foreground mb-5 sm:mb-10 tracking-tight text-center">Academic logs</h2>
-              <div className="grid grid-cols-1 gap-3 sm:gap-5">
-                {EDUCATION.map((edu, idx) => (
-                  <Card key={idx} className="p-4 sm:p-6 opacity-0 animate-fade-in-up [animation-fill-mode:forwards] min-w-0" style={{ animationDelay: `${(idx + 1) * 80}ms` }}>
-                    <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
-                      <div className="flex flex-col gap-1.5 sm:gap-2 min-w-0">
-                        <h3 className="text-sm font-medium text-foreground tracking-tight break-words-mobile">{edu.degree}</h3>
-                        <Chip label={edu.institution} size="small" color={edu.badge ? 'primary' : 'default'} sx={{ fontSize: '0.65rem', width: 'fit-content' }} />
+            {/* === EXPERIENCE TAB === */}
+            {activeTab === 'experience' && (
+              <div>
+                <div className="mb-6 sm:mb-10">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                    Experience
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                    Professional journey and key contributions
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:gap-5 max-w-3xl">
+                  {EXPERIENCE.map((exp, idx) => (
+                    <BentoCard key={idx} className="bento-animate">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                        <div className="flex items-start gap-3">
+                          <div
+                            className="p-2.5 rounded-xl shrink-0"
+                            style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+                          >
+                            <Briefcase size={18} style={{ color: '#f97316' }} />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-sm sm:text-base" style={{ color: 'var(--brand-light)' }}>
+                              {exp.role}
+                            </h3>
+                            <p className="text-xs font-medium" style={{ color: '#f97316' }}>
+                              {exp.company}
+                            </p>
+                          </div>
+                        </div>
+                        <Chip
+                          icon={<Activity size={12} className="animate-pulse" />}
+                          label={exp.period}
+                          size="small"
+                          sx={{ fontSize: '0.7rem', bgcolor: 'rgba(249,115,22,0.1)', color: '#f97316', border: '1px solid rgba(249,115,22,0.2)' }}
+                        />
                       </div>
-                      {edu.badge && (
-                        <Chip label={edu.badge} size="small" variant="outlined" sx={{ fontSize: '0.65rem' }} />
-                      )}
-                    </div>
-                    <p className="text-muted-foreground text-[11px]">{edu.period}</p>
-                  </Card>
-                ))}
+                      <ul className="space-y-2.5 pl-1">
+                        {exp.highlights.map((h, i) => (
+                          <li key={i} className="flex gap-2.5 text-xs sm:text-[13px] leading-relaxed" style={{ color: 'var(--brand-slate-light)' }}>
+                            <ChevronRight size={14} className="shrink-0 mt-0.5" style={{ color: '#f97316', opacity: 0.6 }} />
+                            {h}
+                          </li>
+                        ))}
+                      </ul>
+                    </BentoCard>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === 'faq' && (
-            <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] max-w-2xl mx-auto w-full px-1 sm:px-0">
-              <h2 className="text-xl font-medium text-foreground mb-5 sm:mb-8 tracking-tight text-center">Terminal FAQ</h2>
-              {FAQ_ITEMS.map((faq, i) => (
-                <Accordion key={i} sx={{ mb: 1, '&:before': { display: 'none' } }}>
-                  <AccordionSummary expandIcon={<span style={{ color: '#f97316' }}>▼</span>}>
-                    <span className="flex items-start gap-2.5">
-                      <HelpCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#f97316' }} />
-                      <span className="text-[13px] sm:text-sm font-medium">{faq.question}</span>
-                    </span>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <p className="text-muted-foreground text-xs leading-relaxed pl-6">{faq.answer}</p>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </div>
-          )}
+            {/* === EDUCATION TAB === */}
+            {activeTab === 'education' && (
+              <div>
+                <div className="mb-6 sm:mb-10">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                    Education
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                    Academic background and qualifications
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 max-w-3xl">
+                  {EDUCATION.map((edu, idx) => (
+                    <BentoCard key={idx} className="bento-animate">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className="p-2.5 rounded-xl shrink-0"
+                          style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+                        >
+                          <GraduationCap size={18} style={{ color: '#f97316' }} />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-sm break-words-mobile" style={{ color: 'var(--brand-light)' }}>
+                            {edu.degree}
+                          </h3>
+                          <p className="text-xs mt-0.5" style={{ color: '#f97316' }}>
+                            {edu.institution}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Chip label={edu.period} size="small" sx={{ fontSize: '0.65rem', bgcolor: 'rgba(93,112,127,0.1)', color: 'text.secondary' }} />
+                        {edu.badge && (
+                          <Chip label={edu.badge} size="small" variant="outlined" sx={{ fontSize: '0.65rem', borderColor: 'rgba(249,115,22,0.3)', color: '#f97316' }} />
+                        )}
+                      </div>
+                    </BentoCard>
+                  ))}
+                </div>
+              </div>
+            )}
 
-          {activeTab === 'contact' && (
-            <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] flex-1 flex flex-col justify-center min-h-[50vh] sm:min-h-[60vh] w-full px-2 sm:px-0">
-              <div className="max-w-lg mx-auto w-full min-w-0">
-                <form onSubmit={handleContactSubmit} className="relative">
-                  <Card sx={{ boxShadow: 4 }}>
-                    <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+            {/* === FAQ TAB === */}
+            {activeTab === 'faq' && (
+              <div>
+                <div className="mb-6 sm:mb-10">
+                  <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                    FAQ
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                    Common questions answered
+                  </p>
+                </div>
+                <div className="max-w-3xl space-y-3">
+                  {FAQ_ITEMS.map((faq, i) => (
+                    <Accordion
+                      key={i}
+                      className="bento-animate"
+                      sx={{
+                        borderRadius: '16px !important',
+                        border: '1px solid',
+                        borderColor: isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)',
+                        backdropFilter: 'blur(12px)',
+                        overflow: 'hidden',
+                        '&:before': { display: 'none' },
+                        '&.Mui-expanded': { m: 0 },
+                      }}
+                      disableGutters
+                    >
+                      <AccordionSummary
+                        expandIcon={<ChevronRight size={16} style={{ color: '#f97316', transition: 'transform 0.2s' }} />}
+                        sx={{
+                          px: { xs: 2, sm: 3 },
+                          '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': { transform: 'rotate(90deg)' },
+                        }}
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <HelpCircle size={16} style={{ color: '#f97316', flexShrink: 0 }} />
+                          <span className="text-[13px] sm:text-sm font-medium">{faq.question}</span>
+                        </span>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: 2.5 }}>
+                        <p className="text-xs sm:text-[13px] leading-relaxed pl-7" style={{ color: 'var(--brand-slate-light)' }}>
+                          {faq.answer}
+                        </p>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* === CONTACT TAB === */}
+            {activeTab === 'contact' && (
+              <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                <div className="w-full max-w-lg">
+                  <div className="mb-6 sm:mb-10 text-center">
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                      Get in touch
+                    </h2>
+                    <p className="text-sm" style={{ color: 'var(--brand-slate-light)' }}>
+                      Let's discuss your next project
+                    </p>
+                  </div>
+
+                  <BentoCard hover={false} className="bento-animate">
+                    <form onSubmit={handleContactSubmit}>
                       {CONTACT_STEPS.map((step, i) => {
-                        const isActive = contactStep === i + 1;
-                        if (!isActive) return null;
+                        if (contactStep !== i + 1) return null;
                         const isTextarea = step.id === 'message';
                         return (
-                          <div key={step.id} className="space-y-6 animate-fade-in-up opacity-0 [animation-fill-mode:forwards]">
-                            <label htmlFor={`contact-${step.id}`} className="block text-sm text-foreground tracking-wide">
+                          <div key={step.id} className="space-y-5 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
+                            <label htmlFor={`contact-${step.id}`} className="block text-sm font-medium" style={{ color: 'var(--brand-light)' }}>
                               {step.label}
                             </label>
                             {isTextarea ? (
@@ -484,56 +650,81 @@ const App: React.FC = () => {
                           </div>
                         );
                       })}
-                    </CardContent>
-                    <div className="relative px-4 sm:px-8 md:px-12 py-5 sm:py-6 pb-6 sm:pb-8 flex items-center justify-between gap-3 sm:gap-4 border-t border-border">
-                      <Button variant="text" size="small" onClick={handleContactBack} sx={{ minHeight: 44, visibility: contactStep === 1 ? 'hidden' : 'visible' }}>
-                        Back
-                      </Button>
-                      <div className="flex items-center gap-2">
-                        {[1, 2, 3].map((n) => (
-                          <span key={n} className={`w-1.5 h-1.5 rounded-full transition-colors ${contactStep >= n ? 'bg-primary' : 'bg-muted-foreground/50'}`} />
-                        ))}
-                      </div>
-                      {contactStep < 3 ? (
-                        <Button
-                          type="button"
-                          onClick={handleContactNext}
-                          disabled={(contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)}
-                        >
-                          Next
-                        </Button>
-                      ) : (
-                        <Button type="submit" variant="contained" disabled={!canSubmit} aria-label="Send message">
-                          Send <Send className="w-3 h-3" style={{ marginLeft: 4 }} />
-                        </Button>
-                      )}
-                    </div>
-                  </Card>
-                </form>
-                <p className="mt-4 sm:mt-5 pt-4 sm:pt-5 text-center text-[11px] sm:text-xs text-muted-foreground break-words-mobile px-1">
-                  <span className="opacity-90">Opens Your Email Client</span>
-                  <span className="mx-2 opacity-50">·</span>
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary hover:text-primary/90 transition-colors">{CONTACT_EMAIL}</a>
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
 
-          {/* Global Footer Status Bar - compact on mobile */}
-          <div className="footer-status-bar p-2.5 sm:p-3 border-t border-border flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-between gap-2 text-[10px] sm:text-xs text-muted-foreground bg-background/95 backdrop-blur-xl sticky bottom-0 z-20">
-          <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-5 flex-wrap">
-            <span className="text-foreground/80">© 2025 Usama_Studio</span>
-            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary/70" /> System_Stable</span>
+                      <div className="flex items-center justify-between gap-3 mt-6 pt-4" style={{ borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)'}` }}>
+                        <Button
+                          variant="text"
+                          size="small"
+                          onClick={handleContactBack}
+                          sx={{ visibility: contactStep === 1 ? 'hidden' : 'visible', minHeight: 40 }}
+                        >
+                          Back
+                        </Button>
+                        <div className="flex items-center gap-2">
+                          {[1, 2, 3].map((n) => (
+                            <span
+                              key={n}
+                              className="w-1.5 h-1.5 rounded-full transition-colors"
+                              style={{ backgroundColor: contactStep >= n ? '#f97316' : (isDark ? 'rgba(93,112,127,0.4)' : 'rgba(93,112,127,0.25)') }}
+                            />
+                          ))}
+                        </div>
+                        {contactStep < 3 ? (
+                          <Button
+                            variant="contained"
+                            size="small"
+                            onClick={handleContactNext}
+                            disabled={(contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)}
+                            sx={{ minHeight: 40 }}
+                          >
+                            Next
+                          </Button>
+                        ) : (
+                          <Button type="submit" variant="contained" size="small" disabled={!canSubmit} sx={{ minHeight: 40 }}>
+                            Send <Send size={14} style={{ marginLeft: 6 }} />
+                          </Button>
+                        )}
+                      </div>
+                    </form>
+                  </BentoCard>
+
+                  <p className="mt-5 text-center text-xs" style={{ color: 'var(--brand-slate-light)' }}>
+                    Opens your email client
+                    <span className="mx-2 opacity-40">·</span>
+                    <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: '#f97316' }}>{CONTACT_EMAIL}</a>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-5 flex-wrap">
-            <span className="flex items-center gap-2">
-               <div className={`w-1.5 h-1.5 rounded-full ${isTyping ? 'bg-primary animate-pulse' : 'bg-muted-foreground/60'}`}></div>
-               {isTyping ? 'AI_Core_Active' : 'Idle_Wait'}
-            </span>
-            <Chip label={online ? 'Connection: Encrypted' : 'Offline'} size="small" variant="outlined" sx={{ fontSize: '0.65rem' }} />
-          </div>
-          </div>
+
+          {/* Footer */}
+          <footer
+            className="px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px]"
+            style={{
+              borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.15)' : 'rgba(93,112,127,0.1)'}`,
+              color: 'var(--brand-slate-light)',
+              backgroundColor: isDark ? 'rgba(15,17,23,0.6)' : 'rgba(244,246,249,0.6)',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <span style={{ color: 'var(--brand-light)', opacity: 0.7 }}>© 2025 Usama Shafique</span>
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck size={12} style={{ color: '#f97316', opacity: 0.7 }} /> Stable
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1.5">
+                <div className={`w-1.5 h-1.5 rounded-full ${isTyping ? 'animate-pulse' : ''}`} style={{ backgroundColor: isTyping ? '#f97316' : 'rgba(93,112,127,0.5)' }} />
+                {isTyping ? 'AI Active' : 'Ready'}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: online ? '#22c55e' : '#ef4444' }} />
+                {online ? 'Online' : 'Offline'}
+              </span>
+            </div>
+          </footer>
         </div>
       </main>
 

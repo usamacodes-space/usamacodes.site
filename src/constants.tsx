@@ -1,4 +1,4 @@
-import { BrainCircuit, Briefcase, Cpu, FolderOpen, Github, Globe, GraduationCap, HelpCircle, Layout, LayoutGrid, Linkedin, Mail, Sparkles, Twitter } from 'lucide-react';
+import { BrainCircuit, Briefcase, Cpu, FolderOpen, Github, Globe, GraduationCap, HelpCircle, Layout, LayoutGrid, Linkedin, Mail, Sparkles, Twitter, User } from 'lucide-react';
 import { EDUCATION as EDU_RAW, EXPERIENCE as EXP_RAW, FAQ_ITEMS as FAQ_RAW, PROJECTS as PROJECTS_RAW } from './data/portfolio';
 import { Project } from './types';
 
@@ -24,6 +24,7 @@ export const SOCIAL_LINKS = [
 
 export const NAV_ITEMS = [
   { id: 'start', label: 'Start', icon: <LayoutGrid className="w-4 h-4" /> },
+  { id: 'about', label: 'About', icon: <User className="w-4 h-4" /> },
   { id: 'projects', label: 'Projects', icon: <FolderOpen className="w-4 h-4" /> },
   { id: 'experience', label: 'Experience', icon: <Briefcase className="w-4 h-4" /> },
   { id: 'education', label: 'Education', icon: <GraduationCap className="w-4 h-4" /> },

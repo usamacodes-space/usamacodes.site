@@ -1,56 +1,78 @@
-import { Cpu, Layout, MessageSquare, QrCode, Ticket } from 'lucide-react';
-import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import { Cpu, ExternalLink, Layout, MessageSquare, QrCode, Ticket } from 'lucide-react';
 import Chip from '@mui/material/Chip';
+import React from 'react';
 import { Project } from '../types';
+import { BentoCard } from './BentoCard';
 
 interface ProjectCardProps {
   project: Project;
+  featured?: boolean;
 }
 
 const getIcon = (iconName?: string) => {
-  const iconProps = { className: 'w-5 h-5 text-primary' };
+  const props = { size: 20, style: { color: '#f97316' } };
   switch (iconName) {
-    case 'MessageSquare':
-      return <MessageSquare {...iconProps} />;
-    case 'QrCode':
-      return <QrCode {...iconProps} />;
-    case 'Ticket':
-      return <Ticket {...iconProps} />;
-    case 'Layout':
-      return <Layout {...iconProps} />;
-    default:
-      return <Cpu {...iconProps} />;
+    case 'MessageSquare': return <MessageSquare {...props} />;
+    case 'QrCode': return <QrCode {...props} />;
+    case 'Ticket': return <Ticket {...props} />;
+    case 'Layout': return <Layout {...props} />;
+    default: return <Cpu {...props} />;
   }
 };
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
-  return (
-    <Card className="h-full flex flex-col overflow-hidden" sx={{ '&:hover': { boxShadow: 4, borderColor: 'primary.main' }, border: '1px solid', borderColor: 'rgba(93,112,127,0.4)' }}>
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-        <div className="flex flex-row items-start justify-between gap-2 mb-2">
-          <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: 'rgba(93,112,127,0.2)', border: '1px solid rgba(93,112,127,0.4)' }}>
-            {getIcon(project.icon)}
-          </div>
-          <div className="flex gap-1 flex-wrap justify-end min-w-0 max-w-[70%]">
-            {project.tags.map((tag, j) => (
-              <Chip key={j} label={tag} size="small" variant="outlined" sx={{ fontSize: '0.6rem', height: 20 }} />
-            ))}
-          </div>
-        </div>
-        <h3 className="font-semibold text-sm sm:text-base mb-1.5 sm:mb-2" style={{ color: '#ecebf3' }}>
-          {project.title}
-        </h3>
-        <p className="text-[11px] sm:text-xs leading-relaxed mb-2" style={{ color: '#b5c1d2' }}>
-          {project.description}
-        </p>
-        <div className="pt-2 border-t" style={{ borderColor: 'rgba(93,112,127,0.4)' }}>
-          <span className="text-[10px] italic" style={{ color: '#b5c1d2' }}>
-            Project demos will be live soon.
-          </span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project, featured }) => (
+  <BentoCard
+    colSpan={featured ? 2 : undefined}
+    sx={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      ...(featured && { gridColumn: { xs: 'span 1', md: 'span 2' } }),
+    }}
+  >
+    <div className="flex items-start justify-between gap-3 mb-3">
+      <div
+        className="p-2.5 rounded-xl shrink-0"
+        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+      >
+        {getIcon(project.icon)}
+      </div>
+      {project.demoUrl && (
+        <a
+          href={project.demoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 p-1.5 rounded-lg transition-colors"
+          style={{ color: 'var(--brand-slate-light)' }}
+          aria-label={`Visit ${project.title}`}
+        >
+          <ExternalLink size={14} />
+        </a>
+      )}
+    </div>
+
+    <h3 className="font-semibold text-sm sm:text-base mb-1.5" style={{ color: 'var(--brand-light)' }}>
+      {project.title}
+    </h3>
+    <p className="text-xs sm:text-[13px] leading-relaxed mb-4 flex-1" style={{ color: 'var(--brand-slate-light)' }}>
+      {project.description}
+    </p>
+
+    <div className="flex gap-1.5 flex-wrap mt-auto">
+      {project.tags.map((tag, j) => (
+        <Chip
+          key={j}
+          label={tag}
+          size="small"
+          variant="outlined"
+          sx={{
+            fontSize: '0.65rem',
+            height: 22,
+            borderColor: 'rgba(93,112,127,0.3)',
+            color: 'text.secondary',
+          }}
+        />
+      ))}
+    </div>
+  </BentoCard>
+);
