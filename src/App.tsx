@@ -661,10 +661,7 @@ const App: React.FC = () => {
           <div
             className="shrink-0 px-4 sm:px-6 py-2.5"
             style={{
-              borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.12)' : 'rgba(93,112,127,0.08)'}`,
-              backgroundColor: isDark ? 'rgba(15,17,23,0.5)' : 'rgba(244,246,249,0.5)',
-              backdropFilter: 'blur(24px) saturate(1.5)',
-              WebkitBackdropFilter: 'blur(24px) saturate(1.5)',
+              backgroundColor: 'transparent',
             }}
           >
             <div className="max-w-xl mx-auto">
