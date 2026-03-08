@@ -193,7 +193,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="flex flex-col h-screen overflow-hidden select-none relative"
+      className="flex flex-col h-dvh overflow-hidden select-none relative"
       style={{ backgroundColor: isDark ? '#0f1117' : '#f4f6f9', color: isDark ? '#ecebf3' : '#1a1d24' }}
     >
       <React.Suspense fallback={null}>
