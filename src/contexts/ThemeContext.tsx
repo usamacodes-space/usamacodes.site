@@ -1,4 +1,6 @@
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { darkTheme, lightTheme } from '../theme';
 
 type Theme = "dark" | "light";
 const STORAGE_KEY = "portfolio-theme";
@@ -28,9 +30,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setTheme = (t: Theme) => setThemeState(t);
   const toggleTheme = () => setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
 
+  const muiTheme = theme === "dark" ? darkTheme : lightTheme;
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
-      {children}
+      <MuiThemeProvider theme={muiTheme}>
+        {children}
+      </MuiThemeProvider>
     </ThemeContext.Provider>
   );
 }

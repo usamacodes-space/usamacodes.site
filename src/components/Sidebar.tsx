@@ -1,6 +1,6 @@
 import { ChevronLeft, FileDown, Moon, Settings, Snowflake, Sun } from 'lucide-react';
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import Button from '@mui/material/Button';
 import { NAV_ITEMS, RESUME_URL, SOCIAL_LINKS } from '../constants';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -27,19 +27,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const asideClass = overlay
-    ? 'fixed inset-y-0 left-0 w-64 max-w-[85vw] z-50 flex flex-col border-r border-border overflow-y-auto bg-background shadow-xl animate-slide-in-left'
+    ? 'fixed inset-y-0 left-0 w-64 max-w-[85vw] z-50 flex flex-col border-r overflow-y-auto shadow-xl animate-slide-in-left'
     : `${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 ease-in-out flex flex-col border-r border-border overflow-hidden z-20 bg-background`;
   return (
-    <aside className={asideClass}>
-      <div className="p-5 flex flex-col items-center text-center border-b border-border relative">
+    <aside className={asideClass} style={{ backgroundColor: '#0f1117', borderColor: 'rgba(93,112,127,0.4)' }}>
+      <div className="p-5 flex flex-col items-center text-center border-b relative" style={{ borderColor: 'rgba(93,112,127,0.4)' }}>
         <Button
-          variant="ghost"
-          size="icon"
+          variant="text"
+          size="small"
           className="absolute top-3 right-3"
           onClick={() => setSidebarOpen(false)}
           aria-label="Collapse sidebar"
+          sx={{ minWidth: 36, minHeight: 36 }}
         >
-          <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+          <ChevronLeft className="w-4 h-4" style={{ color: '#b5c1d2' }} />
         </Button>
 
         <div className="relative mb-3 group mt-2">
@@ -78,23 +79,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </a>
         <div className="flex items-center gap-2">
           {SOCIAL_LINKS.map((link) => (
-            <Button
-              key={link.label}
-              variant="ghost"
-              size="icon"
-              asChild
-              className="h-auto w-auto p-1.5"
-            >
             <a
+              key={link.label}
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
               aria-label={link.label}
+              className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              style={{ color: '#b5c1d2' }}
             >
               {React.cloneElement(link.icon as React.ReactElement<any>, { className: 'w-4 h-4' })}
             </a>
-            </Button>
           ))}
         </div>
       </div>
@@ -104,11 +99,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {NAV_ITEMS.map((item) => (
           <Button
             key={item.id}
-            variant={activeTab === item.id ? 'secondary' : 'ghost'}
-            className={`w-full justify-start gap-2.5 px-3 py-1.5 h-auto text-xs font-normal ${
-              activeTab === item.id ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'
-            }`}
+            variant="text"
+            className="w-full justify-start gap-2.5 px-3 py-1.5 h-auto text-xs font-normal"
             onClick={() => setActiveTab(item.id)}
+            sx={{
+              justifyContent: 'flex-start',
+              color: activeTab === item.id ? '#f97316' : '#b5c1d2',
+              bgcolor: activeTab === item.id ? 'rgba(249,115,22,0.2)' : 'transparent',
+              '&:hover': { bgcolor: 'rgba(93,112,127,0.2)', color: activeTab === item.id ? '#f97316' : '#ecebf3' },
+            }}
           >
             <span className="opacity-70">
               {React.cloneElement(item.icon as React.ReactElement<any>, { className: 'w-3.5 h-3.5' })}
@@ -118,30 +117,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ))}
       </nav>
 
-      <div className="mt-auto p-3 space-y-1 border-t border-border">
+      <div className="mt-auto p-3 space-y-1 border-t" style={{ borderColor: 'rgba(93,112,127,0.4)' }}>
         <Button
-          variant={isSnowing ? 'secondary' : 'ghost'}
-          className={`w-full justify-start gap-2.5 text-[11px] px-3 py-1.5 h-auto font-normal ${
-            isSnowing ? 'bg-primary/20 text-primary border border-primary/40' : 'text-muted-foreground hover:text-foreground'
-          }`}
+          variant="text"
+          className="w-full justify-start gap-2.5 text-[11px] px-3 py-1.5 h-auto font-normal"
           onClick={() => setIsSnowing(!isSnowing)}
+          sx={{
+            justifyContent: 'flex-start',
+            color: isSnowing ? '#f97316' : '#b5c1d2',
+            bgcolor: isSnowing ? 'rgba(249,115,22,0.2)' : 'transparent',
+            border: isSnowing ? '1px solid rgba(249,115,22,0.4)' : 'none',
+            '&:hover': { bgcolor: 'rgba(93,112,127,0.2)', color: isSnowing ? '#f97316' : '#ecebf3' },
+          }}
         >
           <Snowflake className="w-3.5 h-3.5" />
           <span className="whitespace-nowrap">{isSnowing ? 'Stop Snow' : 'Let It Snow'}</span>
         </Button>
         <Button
-          variant="ghost"
-          className="w-full justify-start gap-2.5 text-xs px-3 py-1.5 h-auto font-normal text-muted-foreground hover:text-foreground"
+          variant="text"
+          className="w-full justify-start gap-2.5 text-xs px-3 py-1.5 h-auto font-normal"
           onClick={toggleTheme}
+          sx={{ justifyContent: 'flex-start', color: '#b5c1d2', '&:hover': { bgcolor: 'rgba(93,112,127,0.2)', color: '#ecebf3' } }}
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
           <span className="whitespace-nowrap">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
         </Button>
         <Button
-          variant="ghost"
-          className="w-full justify-start gap-2.5 text-xs px-3 py-1.5 h-auto font-normal text-muted-foreground hover:text-foreground"
+          variant="text"
+          className="w-full justify-start gap-2.5 text-xs px-3 py-1.5 h-auto font-normal"
           onClick={onOpenSettings}
+          sx={{ justifyContent: 'flex-start', color: '#b5c1d2', '&:hover': { bgcolor: 'rgba(93,112,127,0.2)', color: '#ecebf3' } }}
           aria-label="Settings"
         >
           <Settings className="w-3.5 h-3.5" />

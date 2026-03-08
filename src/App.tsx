@@ -10,17 +10,14 @@ import {
   ShieldCheck,
   X
 } from 'lucide-react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -232,7 +229,7 @@ const App: React.FC = () => {
   const showSnow = isSnowing && !reducedMotion;
 
   return (
-    <div className="flex h-screen overflow-hidden select-none relative text-sm bg-background">
+    <div className="flex h-screen overflow-hidden select-none relative text-sm" style={{ backgroundColor: '#0f1117' }}>
       <React.Suspense fallback={null}>
         <ThreeScene />
         {showSnow && <Snowfall />}
@@ -246,7 +243,7 @@ const App: React.FC = () => {
                 <Settings className="w-4 h-4 text-primary" />
                 <h3 id="settings-title" className="text-sm font-medium text-foreground tracking-wide">System parameters</h3>
               </div>
-              <Button variant="ghost" size="icon" onClick={closeSettings} aria-label="Close"><X className="w-4 h-4 text-muted-foreground" /></Button>
+              <Button variant="text" size="small" onClick={closeSettings} aria-label="Close" sx={{ minWidth: 36, minHeight: 36 }}><X className="w-4 h-4" style={{ color: '#b5c1d2' }} /></Button>
             </div>
             <div className="p-5 space-y-5">
               <div className="flex items-center justify-between">
@@ -265,7 +262,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="p-3 bg-muted/50 rounded-b-xl flex justify-end">
-              <Button onClick={closeSettings} size="sm">Execute</Button>
+              <Button onClick={closeSettings} variant="contained" size="small">Execute</Button>
             </div>
           </div>
         </div>
@@ -339,9 +336,7 @@ const App: React.FC = () => {
                   <h2 className="text-lg sm:text-xl font-medium text-foreground mb-0.5 sm:mb-1 tracking-wide">Build pipeline</h2>
                   <p className="text-[10px] sm:text-xs text-muted-foreground break-words-mobile">Technical Prototypes And Production-Grade Applications</p>
                 </div>
-                <Badge variant="secondary" className="text-[9px] sm:text-[10px] shrink-0">
-                  Version: Latest
-                </Badge>
+                <Chip label="Version: Latest" size="small" sx={{ fontSize: '0.65rem' }} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 auto-rows-fr">
                 {PROJECTS.map((p, i) => (
@@ -380,10 +375,7 @@ const App: React.FC = () => {
                               <p className="text-primary text-[10px] sm:text-[11px] break-words-mobile">{exp.company}</p>
                             </div>
                           </div>
-                          <Badge variant="accent" className="shrink-0 text-[10px] sm:text-[11px]">
-                            <Activity className="w-3 h-3 animate-pulse shrink-0" />
-                            <span className="whitespace-nowrap">{exp.period}</span>
-                          </Badge>
+                          <Chip icon={<Activity className="w-3 h-3 animate-pulse" />} label={exp.period} size="small" color="primary" sx={{ fontSize: '0.65rem' }} />
                         </div>
                         <ul className="space-y-2 sm:space-y-3 pl-1">
                           {exp.highlights.map((bullet, i) => (
@@ -406,18 +398,14 @@ const App: React.FC = () => {
               <h2 className="text-xl font-medium text-foreground mb-5 sm:mb-10 tracking-tight text-center">Academic logs</h2>
               <div className="grid grid-cols-1 gap-3 sm:gap-5">
                 {EDUCATION.map((edu, idx) => (
-                  <Card key={idx} className="p-4 sm:p-6 hover:border-primary/50 transition-all duration-300 group opacity-0 animate-fade-in-up [animation-fill-mode:forwards] min-w-0" style={{ animationDelay: `${(idx + 1) * 80}ms` }}>
+                  <Card key={idx} className="p-4 sm:p-6 opacity-0 animate-fade-in-up [animation-fill-mode:forwards] min-w-0" style={{ animationDelay: `${(idx + 1) * 80}ms` }}>
                     <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
                       <div className="flex flex-col gap-1.5 sm:gap-2 min-w-0">
-                        <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors tracking-tight break-words-mobile">{edu.degree}</h3>
-                        <Badge variant={edu.badge ? 'accent' : 'secondary'} className="w-fit text-[9px] sm:text-[10px]">
-                          {edu.institution}
-                        </Badge>
+                        <h3 className="text-sm font-medium text-foreground tracking-tight break-words-mobile">{edu.degree}</h3>
+                        <Chip label={edu.institution} size="small" color={edu.badge ? 'primary' : 'default'} sx={{ fontSize: '0.65rem', width: 'fit-content' }} />
                       </div>
                       {edu.badge && (
-                        <Badge variant="outline" className="text-[9px] sm:text-[10px] text-primary shrink-0 self-start">
-                          {edu.badge}
-                        </Badge>
+                        <Chip label={edu.badge} size="small" variant="outlined" sx={{ fontSize: '0.65rem' }} />
                       )}
                     </div>
                     <p className="text-muted-foreground text-[11px]">{edu.period}</p>
@@ -430,21 +418,19 @@ const App: React.FC = () => {
           {activeTab === 'faq' && (
             <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] max-w-2xl mx-auto w-full px-1 sm:px-0">
               <h2 className="text-xl font-medium text-foreground mb-5 sm:mb-8 tracking-tight text-center">Terminal FAQ</h2>
-              <Accordion type="single" collapsible className="space-y-2">
-                {FAQ_ITEMS.map((faq, i) => (
-                  <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-xl px-4 bg-card data-[state=open]:border-primary/50 transition-colors">
-                    <AccordionTrigger className="text-left hover:no-underline py-4">
-                      <span className="flex items-start gap-2.5">
-                        <HelpCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                        <span className="text-[13px] sm:text-sm font-medium">{faq.question}</span>
-                      </span>
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-xs leading-relaxed pl-6 pb-4">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              {FAQ_ITEMS.map((faq, i) => (
+                <Accordion key={i} sx={{ mb: 1, '&:before': { display: 'none' } }}>
+                  <AccordionSummary expandIcon={<span style={{ color: '#f97316' }}>▼</span>}>
+                    <span className="flex items-start gap-2.5">
+                      <HelpCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#f97316' }} />
+                      <span className="text-[13px] sm:text-sm font-medium">{faq.question}</span>
+                    </span>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <p className="text-muted-foreground text-xs leading-relaxed pl-6">{faq.answer}</p>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
             </div>
           )}
 
@@ -452,8 +438,8 @@ const App: React.FC = () => {
             <div className="animate-fade-in-up opacity-0 [animation-fill-mode:forwards] flex-1 flex flex-col justify-center min-h-[50vh] sm:min-h-[60vh] w-full px-2 sm:px-0">
               <div className="max-w-lg mx-auto w-full min-w-0">
                 <form onSubmit={handleContactSubmit} className="relative">
-                  <Card className="overflow-hidden shadow-xl">
-                    <CardContent className="relative p-5 sm:p-8 md:p-12 pb-5 sm:pb-6">
+                  <Card sx={{ boxShadow: 4 }}>
+                    <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
                       {CONTACT_STEPS.map((step, i) => {
                         const isActive = contactStep === i + 1;
                         if (!isActive) return null;
@@ -464,7 +450,7 @@ const App: React.FC = () => {
                               {step.label}
                             </label>
                             {isTextarea ? (
-                              <Textarea
+                              <TextField
                                 id={`contact-${step.id}`}
                                 placeholder={step.placeholder}
                                 value={step.value}
@@ -476,17 +462,23 @@ const App: React.FC = () => {
                                     else (e.target as HTMLElement).closest('form')?.requestSubmit();
                                   }
                                 }}
-                                className="min-h-[120px] sm:min-h-[140px] text-base sm:text-sm"
+                                multiline
+                                minRows={4}
+                                fullWidth
+                                variant="outlined"
+                                size="small"
                               />
                             ) : (
-                              <Input
+                              <TextField
                                 id={`contact-${step.id}`}
                                 type={step.id === 'email' ? 'email' : 'text'}
                                 placeholder={step.placeholder}
                                 value={step.value}
                                 onChange={(e) => step.setValue(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleContactNext()}
-                                className="h-12 min-h-[44px] text-base sm:text-sm"
+                                fullWidth
+                                variant="outlined"
+                                size="small"
                               />
                             )}
                           </div>
@@ -494,7 +486,7 @@ const App: React.FC = () => {
                       })}
                     </CardContent>
                     <div className="relative px-4 sm:px-8 md:px-12 py-5 sm:py-6 pb-6 sm:pb-8 flex items-center justify-between gap-3 sm:gap-4 border-t border-border">
-                      <Button variant="ghost" size="sm" onClick={handleContactBack} className={`min-h-[44px] ${contactStep === 1 ? 'invisible' : ''}`}>
+                      <Button variant="text" size="small" onClick={handleContactBack} sx={{ minHeight: 44, visibility: contactStep === 1 ? 'hidden' : 'visible' }}>
                         Back
                       </Button>
                       <div className="flex items-center gap-2">
@@ -511,8 +503,8 @@ const App: React.FC = () => {
                           Next
                         </Button>
                       ) : (
-                        <Button type="submit" disabled={!canSubmit} aria-label="Send message">
-                          Send <Send className="w-3 h-3" />
+                        <Button type="submit" variant="contained" disabled={!canSubmit} aria-label="Send message">
+                          Send <Send className="w-3 h-3" style={{ marginLeft: 4 }} />
                         </Button>
                       )}
                     </div>
@@ -539,9 +531,7 @@ const App: React.FC = () => {
                <div className={`w-1.5 h-1.5 rounded-full ${isTyping ? 'bg-primary animate-pulse' : 'bg-muted-foreground/60'}`}></div>
                {isTyping ? 'AI_Core_Active' : 'Idle_Wait'}
             </span>
-            <Badge variant="outline" className="text-[9px] px-2.5 py-0">
-              {online ? 'Connection: Encrypted' : 'Offline'}
-            </Badge>
+            <Chip label={online ? 'Connection: Encrypted' : 'Offline'} size="small" variant="outlined" sx={{ fontSize: '0.65rem' }} />
           </div>
           </div>
         </div>
