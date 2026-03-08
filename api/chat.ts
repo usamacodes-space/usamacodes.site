@@ -73,8 +73,8 @@ export default async function handler(
           { role: "system", content: SYSTEM_PROMPT + context },
           { role: "user", content: text },
         ],
-        max_tokens: 512,
-        temperature: 0.1,
+        max_tokens: 800,
+        temperature: 0.15,
       }),
     });
 
