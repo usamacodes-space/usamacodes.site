@@ -281,7 +281,7 @@ const App: React.FC = () => {
             backgroundColor: isDark ? 'rgba(15, 17, 23, 0.45)' : 'rgba(244, 246, 249, 0.45)',
           }}
         >
-          <div ref={contentRef} className="lenis-content">
+          <div ref={contentRef} className="lenis-content" tabIndex={-1}>
           <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col min-h-full">
 
             {/* === START TAB === */}

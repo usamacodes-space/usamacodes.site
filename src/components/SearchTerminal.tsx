@@ -1,4 +1,4 @@
-import { ArrowUp, Mic } from 'lucide-react';
+import { ArrowUp, Mic, RotateCcw } from 'lucide-react';
 import IconButton from '@mui/material/IconButton';
 import React from 'react';
 import { CAPABILITIES } from '../constants';
@@ -19,12 +19,14 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   query,
   setQuery,
   handleSearch,
+  onClear,
   aiResponse,
   isTyping,
   chatError,
   chatErrorMessage,
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const hasConversation = !!(aiResponse || isTyping);
 
   return (
     <div className="w-full flex flex-col flex-1">
@@ -77,7 +79,7 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
       </div>
 
       {/* AI response */}
-      {(aiResponse || isTyping) && (
+      {hasConversation && (
         <BentoCard
           className="mb-4 animate-fade-in-up"
           sx={{
@@ -124,18 +126,40 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
                 </>
               )}
             </div>
+            {/* Reset button */}
+            {!isTyping && (
+              <IconButton
+                onClick={onClear}
+                size="small"
+                aria-label="Reset chat"
+                sx={{
+                  alignSelf: 'flex-start',
+                  color: 'text.secondary',
+                  opacity: 0.6,
+                  '&:hover': { opacity: 1, color: '#f97316' },
+                }}
+              >
+                <RotateCcw size={14} />
+              </IconButton>
+            )}
           </div>
         </BentoCard>
       )}
 
-      {/* Input bar */}
-      <div className="w-full max-w-xl mx-auto pt-1 pb-1 shrink-0">
+      {/* Input bar — sticky at bottom */}
+      <div
+        className="w-full max-w-xl mx-auto pt-2 pb-3 shrink-0 sticky bottom-0"
+        style={{
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }}
+      >
         <div
           className="rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
           style={{
             border: '1px solid rgba(93, 112, 127, 0.25)',
             backgroundColor: 'rgba(93, 112, 127, 0.08)',
-            backdropFilter: 'blur(8px)',
+            backdropFilter: 'blur(12px)',
           }}
         >
           <input
@@ -148,6 +172,16 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             aria-label="Ask a question"
           />
+          {hasConversation && !isTyping && (
+            <IconButton
+              onClick={onClear}
+              size="small"
+              aria-label="Reset chat"
+              sx={{ color: 'text.secondary', '&:hover': { color: '#f97316' } }}
+            >
+              <RotateCcw size={15} />
+            </IconButton>
+          )}
           <IconButton disabled size="small" sx={{ opacity: 0.4 }} aria-label="Voice (coming soon)">
             <Mic size={16} />
           </IconButton>
