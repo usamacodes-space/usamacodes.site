@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
                 />
               </div>
               <span
-                className="font-semibold text-sm tracking-tight hidden sm:inline"
+                className="font-semibold text-sm tracking-tight"
                 style={{ color: theme === 'dark' ? '#ecebf3' : '#1a1d24' }}
               >
                 Usama Shafique
