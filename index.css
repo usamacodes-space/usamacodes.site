@@ -152,13 +152,62 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Mobile: improve touch scroll and tap targets */
-@media (max-width: 768px) {
+/* Mobile: grid layout, touch scroll, tap targets, safe area */
+@media (max-width: 767px) {
+  :root {
+    --mobile-gap: 1rem;
+    --mobile-gap-lg: 1.25rem;
+    --mobile-section-padding: 1rem;
+    --mobile-card-padding: 1rem;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
   .lenis-content {
     -webkit-overflow-scrolling: touch;
   }
   button, a, [role="button"] {
     touch-action: manipulation;
+  }
+  .mobile-content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--mobile-gap-lg);
+    width: 100%;
+    max-width: 100%;
+  }
+  .mobile-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--mobile-gap);
+  }
+  .mobile-center {
+    place-items: center;
+    text-align: center;
+  }
+}
+
+/* Mobile grid: 2-col for suggested prompts */
+@media (max-width: 767px) {
+  .mobile-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+/* Prevent text overflow on mobile */
+@media (max-width: 767px) {
+  .break-words-mobile {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .footer-status-bar {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  #main-content {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }
 }
 

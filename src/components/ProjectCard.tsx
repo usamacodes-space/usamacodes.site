@@ -19,12 +19,12 @@ const getIcon = (iconName?: string) => {
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
-    <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-2xl hover:shadow-[#f97316]/10 active:scale-[0.99] sm:hover:-translate-y-1.5 transition-all duration-300 ease-out group flex flex-col h-full overflow-hidden font-mono bg-[var(--brand-bg)] touch-manipulation">
+    <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-2xl hover:shadow-[#f97316]/10 active:scale-[0.99] sm:hover:-translate-y-1.5 transition-all duration-300 ease-out group flex flex-col min-h-0 h-full overflow-hidden font-mono bg-[var(--brand-bg)] touch-manipulation min-w-0">
       <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
         <div className="p-2.5 sm:p-3 bg-[#5d707f]/20 rounded-lg sm:rounded-xl border border-[#5d707f]/40 group-hover:bg-[#f97316]/20 group-hover:scale-105 transition-all duration-300 shrink-0">
           {getIcon(project.icon)}
         </div>
-        <div className="flex gap-1 sm:gap-1.5 flex-wrap justify-end min-w-0 max-w-[65%] sm:max-w-[60%]">
+        <div className="flex gap-1 sm:gap-1.5 flex-wrap justify-end min-w-0 max-w-[70%] sm:max-w-[60%]">
           {project.tags.map((tag, j) => (
             <span key={j} className="font-mono text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 bg-[#5d707f]/20 border border-[#5d707f]/40 rounded-md text-[var(--brand-slate-light)] group-hover:text-[#f97316] group-hover:border-[#f97316]/50 transition-all duration-200 tracking-tight">
               {tag}

@@ -26,12 +26,12 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full min-w-0 py-6 sm:py-8 px-2 sm:px-1 box-border">
-      <div className="text-center mb-5 sm:mb-8 opacity-0 animate-fade-in-up [animation-fill-mode:forwards]">
-        <h1 className="font-mono text-2xl sm:text-3xl font-medium text-[#ecebf3] mb-2 leading-tight">
-          Ask Me Anything <Sparkles className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-[#f97316] ml-1" />
+    <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full min-w-0 py-5 sm:py-8 px-3 sm:px-1 box-border">
+      <div className="text-center mb-4 sm:mb-8 opacity-0 animate-fade-in-up [animation-fill-mode:forwards]">
+        <h1 className="font-mono text-xl sm:text-3xl font-medium text-[#ecebf3] mb-1.5 sm:mb-2 leading-tight px-1">
+          Ask Me Anything <Sparkles className="inline-block w-5 h-5 sm:w-6 sm:h-6 text-[#f97316] ml-0.5 sm:ml-1" />
         </h1>
-        <p className="font-mono text-[var(--brand-slate-light)] text-sm sm:text-base px-1">Instant Answers About My Work, Projects, And Experience</p>
+        <p className="font-mono text-[var(--brand-slate-light)] text-xs sm:text-base px-2 sm:px-1">Instant Answers About My Work, Projects, And Experience</p>
       </div>
 
       <div className="relative group mb-6 sm:mb-10 w-full max-w-full overflow-hidden">
@@ -48,12 +48,12 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               aria-label="Ask a question about Usama"
             />
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t border-[#5d707f]/40 mt-1 pt-3 sm:pt-2 pb-2 sm:pb-1.5 px-2 sm:px-2">
+            <div className="grid grid-cols-1 sm:flex sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 border-t border-[#5d707f]/40 mt-1 pt-3 sm:pt-2 pb-2 sm:pb-1.5 px-2 sm:px-2">
               <div className="flex items-center gap-1.5 bg-[#5d707f]/20 rounded-full px-2.5 py-1 border border-[#5d707f]/40 w-fit shrink-0">
                 <Zap className="w-2.5 h-2.5 text-[#f97316] shrink-0" />
                 <span className="font-mono text-[10px] text-[var(--brand-slate-light)] tracking-wider hidden sm:inline">Groq</span>
               </div>
-              <div className="flex items-center gap-2 w-full sm:w-auto sm:justify-end">
+              <div className="grid grid-cols-[auto_auto_1fr] sm:flex sm:flex-row sm:items-center sm:justify-end gap-2 w-full sm:w-auto">
                 <button type="button" disabled title="Voice input coming soon" className="p-2 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--brand-slate-light)] opacity-60 cursor-not-allowed shrink-0 sm:min-w-0" aria-label="Voice input (coming soon)">
                   <Mic className="w-4 h-4" />
                 </button>
@@ -78,7 +78,7 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
         </div>
 
         {(aiResponse || isTyping) && (
-          <div className="mt-4 p-5 rounded-xl opacity-0 animate-fade-in-down [animation-fill-mode:forwards] shadow-xl relative bg-[var(--brand-bg)] border border-[#5d707f]/40">
+          <div className="mt-4 p-4 sm:p-5 rounded-xl opacity-0 animate-fade-in-down [animation-fill-mode:forwards] shadow-xl relative bg-[var(--brand-bg)] border border-[#5d707f]/40">
             <div className="absolute top-2 right-4 font-mono text-[10px] text-[var(--brand-slate-light)]">Response Context</div>
             <div className="flex gap-4">
               <div className="w-7 h-7 shrink-0 bg-[#f97316] rounded flex items-center justify-center text-[9px] font-black text-white shadow-lg">✓</div>
@@ -116,19 +116,19 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
           <h3 className="font-mono text-[10px] text-[var(--brand-slate-light)] tracking-wide">Suggested Prompts</h3>
           <div className="h-px flex-1 bg-[#5d707f]/40"></div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 auto-rows-fr min-w-0">
           {CAPABILITIES.map((cap, i) => (
             <button
               key={i}
               onClick={() => { setQuery(cap.prompt); handleSearch(cap.prompt); }}
-              className="p-3 sm:p-3.5 rounded-xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-lg hover:shadow-[#f97316]/10 active:scale-[0.98] sm:hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group text-left opacity-0 animate-fade-in-up [animation-fill-mode:forwards] min-h-[72px] sm:min-h-0 touch-manipulation"
+              className="p-3 sm:p-3.5 rounded-xl bg-[#5d707f]/10 border border-[#5d707f]/40 hover:border-[#f97316]/50 hover:shadow-lg hover:shadow-[#f97316]/10 active:scale-[0.98] sm:hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group text-left opacity-0 animate-fade-in-up [animation-fill-mode:forwards] min-h-[76px] sm:min-h-0 touch-manipulation flex flex-col min-w-0"
               style={{ animationDelay: `${400 + i * 80}ms` }}
             >
               <div className="mb-2 group-hover:scale-110 transition-transform opacity-80">
                 {React.cloneElement(cap.icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4 text-[#f97316]' })}
               </div>
-              <h4 className="font-mono font-medium mb-1 text-[#ecebf3] text-[10px] tracking-wide">{cap.title}</h4>
-              <p className="font-mono text-[10px] text-[var(--brand-slate-light)] leading-snug line-clamp-2">{cap.description}</p>
+              <h4 className="font-mono font-medium mb-0.5 sm:mb-1 text-[#ecebf3] text-[9px] sm:text-[10px] tracking-wide break-words-mobile">{cap.title}</h4>
+              <p className="font-mono text-[9px] sm:text-[10px] text-[var(--brand-slate-light)] leading-snug line-clamp-2 break-words-mobile">{cap.description}</p>
             </button>
           ))}
         </div>
