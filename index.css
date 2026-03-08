@@ -28,6 +28,12 @@
     font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
     scroll-behavior: smooth;
   }
+  [tabindex="-1"]:focus,
+  .lenis:focus,
+  .lenis-content:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 }
 
 @layer utilities {
