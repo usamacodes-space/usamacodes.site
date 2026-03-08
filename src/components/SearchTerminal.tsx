@@ -1,4 +1,4 @@
-import { ArrowUp, Mic, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import IconButton from '@mui/material/IconButton';
 import React from 'react';
 import { CAPABILITIES } from '../constants';
@@ -25,7 +25,6 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
   chatError,
   chatErrorMessage,
 }) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const hasConversation = !!(aiResponse || isTyping);
 
   return (
@@ -146,70 +145,6 @@ export const SearchTerminal: React.FC<SearchTerminalProps> = ({
         </BentoCard>
       )}
 
-      {/* Input bar — sticky at bottom */}
-      <div
-        className="w-full max-w-xl mx-auto pt-2 pb-3 shrink-0 sticky bottom-0"
-        style={{
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-        }}
-      >
-        <div
-          className="rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
-          style={{
-            border: '1px solid rgba(93, 112, 127, 0.25)',
-            backgroundColor: 'rgba(93, 112, 127, 0.08)',
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <input
-            ref={inputRef}
-            placeholder="Ask anything..."
-            className="flex-1 min-w-0 bg-transparent border-0 outline-none px-1 py-2 text-sm"
-            style={{ color: 'var(--brand-light)' }}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            aria-label="Ask a question"
-          />
-          {hasConversation && !isTyping && (
-            <IconButton
-              onClick={onClear}
-              size="small"
-              aria-label="Reset chat"
-              sx={{ color: 'text.secondary', '&:hover': { color: '#f97316' } }}
-            >
-              <RotateCcw size={15} />
-            </IconButton>
-          )}
-          <IconButton disabled size="small" sx={{ opacity: 0.4 }} aria-label="Voice (coming soon)">
-            <Mic size={16} />
-          </IconButton>
-          <IconButton
-            onClick={() => handleSearch()}
-            disabled={isTyping || !query.trim()}
-            size="small"
-            aria-label="Send"
-            sx={{
-              bgcolor: 'primary.main',
-              color: '#fff',
-              width: 34,
-              height: 34,
-              '&:hover': { bgcolor: 'primary.dark' },
-              '&.Mui-disabled': { bgcolor: 'rgba(93,112,127,0.2)', color: 'rgba(255,255,255,0.3)' },
-            }}
-          >
-            {isTyping ? (
-              <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-            ) : (
-              <ArrowUp size={16} />
-            )}
-          </IconButton>
-        </div>
-        <p className="text-center text-[10px] sm:text-xs mt-2.5 px-2" style={{ color: 'var(--brand-slate-light)' }}>
-          AI-powered — ask about my projects, stack, and experience
-        </p>
-      </div>
     </div>
   );
 };

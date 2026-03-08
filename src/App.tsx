@@ -2,17 +2,21 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import {
   Activity,
+  ArrowUp,
   Briefcase,
   ChevronRight,
   Code2,
   GraduationCap,
   HelpCircle,
   MapPin,
+  Mic,
+  RotateCcw,
   Send,
   Settings,
   ShieldCheck,
   X,
 } from 'lucide-react';
+import IconButton from '@mui/material/IconButton';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -651,6 +655,76 @@ const App: React.FC = () => {
           </div>
           </div>
         </div>
+
+        {/* Chat input bar — pinned at bottom, outside scroll area */}
+        {activeTab === 'start' && (
+          <div
+            className="shrink-0 px-4 sm:px-6 py-2.5"
+            style={{
+              borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.12)' : 'rgba(93,112,127,0.08)'}`,
+              backgroundColor: isDark ? 'rgba(15,17,23,0.5)' : 'rgba(244,246,249,0.5)',
+              backdropFilter: 'blur(24px) saturate(1.5)',
+              WebkitBackdropFilter: 'blur(24px) saturate(1.5)',
+            }}
+          >
+            <div className="max-w-xl mx-auto">
+              <div
+                className="rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
+                style={{
+                  border: '1px solid rgba(93, 112, 127, 0.25)',
+                  backgroundColor: 'rgba(93, 112, 127, 0.08)',
+                  backdropFilter: 'blur(12px)',
+                }}
+              >
+                <input
+                  placeholder="Ask anything..."
+                  className="flex-1 min-w-0 bg-transparent border-0 outline-none px-1 py-2 text-sm"
+                  style={{ color: 'var(--brand-light)' }}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  aria-label="Ask a question"
+                />
+                {(aiResponse || isTyping) && !isTyping && (
+                  <IconButton
+                    onClick={() => { setQuery(''); setAiResponse(null); setChatError(false); setChatErrorMessage(null); }}
+                    size="small"
+                    aria-label="Reset chat"
+                    sx={{ color: 'text.secondary', '&:hover': { color: '#f97316' } }}
+                  >
+                    <RotateCcw size={15} />
+                  </IconButton>
+                )}
+                <IconButton disabled size="small" sx={{ opacity: 0.4 }} aria-label="Voice (coming soon)">
+                  <Mic size={16} />
+                </IconButton>
+                <IconButton
+                  onClick={() => handleSearch()}
+                  disabled={isTyping || !query.trim()}
+                  size="small"
+                  aria-label="Send"
+                  sx={{
+                    bgcolor: 'primary.main',
+                    color: '#fff',
+                    width: 34,
+                    height: 34,
+                    '&:hover': { bgcolor: 'primary.dark' },
+                    '&.Mui-disabled': { bgcolor: 'rgba(93,112,127,0.2)', color: 'rgba(255,255,255,0.3)' },
+                  }}
+                >
+                  {isTyping ? (
+                    <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <ArrowUp size={16} />
+                  )}
+                </IconButton>
+              </div>
+              <p className="text-center text-[10px] sm:text-xs mt-2 px-2" style={{ color: 'var(--brand-slate-light)' }}>
+                AI-powered — ask about my projects, stack, and experience
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Footer — pinned at bottom with glass effect */}
         <footer
