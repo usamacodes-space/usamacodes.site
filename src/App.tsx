@@ -29,6 +29,7 @@ import { ProjectCard } from './components/ProjectCard';
 import { SearchTerminal } from './components/SearchTerminal';
 import { CONTACT_EMAIL, EDUCATION, EXPERIENCE, FAQ_ITEMS, PROJECTS, SOCIAL_LINKS } from './constants';
 import { useTheme } from './contexts/ThemeContext';
+import { useLenis } from './hooks/useLenis';
 import { useOnline } from './hooks/useOnline';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import { queryPortfolio } from './services/chat';
@@ -72,8 +73,17 @@ const App: React.FC = () => {
   const reducedMotion = useReducedMotion();
   const contentRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useLenis(scrollRef);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      lenisRef.current?.scrollTo(0, { immediate: true });
+      lenisRef.current?.resize();
+    });
+  }, [activeTab, lenisRef]);
 
   const CONTACT_STEPS = [
     { id: 'name', label: "What's your name?", value: contactName, setValue: setContactName, placeholder: "Your name..." },
@@ -260,9 +270,19 @@ const App: React.FC = () => {
         className="flex-1 overflow-hidden z-10 flex flex-col"
         aria-label="Main content"
       >
-        {/* Content area — fills viewport between header and footer, no page scroll */}
-        <div ref={contentRef} tabIndex={-1} className="flex-1 overflow-hidden">
-          <div ref={sectionRef} className="h-full max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col overflow-y-auto">
+        {/* Scrollable content with Lenis smooth scroll + glass overlay */}
+        <div
+          ref={scrollRef}
+          tabIndex={-1}
+          className="flex-1 overflow-y-auto lenis lenis-smooth"
+          style={{
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: isDark ? 'rgba(15, 17, 23, 0.45)' : 'rgba(244, 246, 249, 0.45)',
+          }}
+        >
+          <div ref={contentRef} className="lenis-content">
+          <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col min-h-full">
 
             {/* === START TAB === */}
             {activeTab === 'start' && (
@@ -507,8 +527,11 @@ const App: React.FC = () => {
                       sx={{
                         borderRadius: '12px !important',
                         border: '1px solid',
-                        borderColor: isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)',
-                        backdropFilter: 'blur(12px)',
+                        borderColor: isDark ? 'rgba(93,112,127,0.18)' : 'rgba(93,112,127,0.12)',
+                        backdropFilter: 'blur(16px) saturate(1.4)',
+                        WebkitBackdropFilter: 'blur(16px) saturate(1.4)',
+                        bgcolor: 'rgba(93, 112, 127, 0.06)',
+                        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.06)',
                         overflow: 'hidden',
                         '&:before': { display: 'none' },
                         '&.Mui-expanded': { m: 0 },
@@ -626,16 +649,19 @@ const App: React.FC = () => {
               </div>
             )}
           </div>
+          </div>
         </div>
 
-        {/* Footer — pinned at bottom, never scrolls */}
+        {/* Footer — pinned at bottom with glass effect */}
         <footer
           className="shrink-0 px-4 sm:px-6 py-2 flex flex-col sm:flex-row items-center justify-between gap-1 text-[10px] sm:text-[11px]"
           style={{
             borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.15)' : 'rgba(93,112,127,0.1)'}`,
             color: 'var(--brand-slate-light)',
-            backgroundColor: isDark ? 'rgba(15,17,23,0.6)' : 'rgba(244,246,249,0.6)',
-            backdropFilter: 'blur(8px)',
+            backgroundColor: isDark ? 'rgba(15,17,23,0.45)' : 'rgba(244,246,249,0.45)',
+            backdropFilter: 'blur(24px) saturate(1.5)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.5)',
+            boxShadow: '0 -4px 30px rgba(0, 0, 0, 0.05)',
           }}
         >
           <div className="flex items-center gap-4">

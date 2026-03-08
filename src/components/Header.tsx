@@ -42,11 +42,12 @@ export const Header: React.FC<HeaderProps> = ({
       <header
         className="sticky top-0 z-40 w-full"
         style={{
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          backgroundColor: theme === 'dark' ? 'rgba(15, 17, 23, 0.8)' : 'rgba(244, 246, 249, 0.8)',
+          backdropFilter: 'blur(24px) saturate(1.5)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.5)',
+          backgroundColor: theme === 'dark' ? 'rgba(15, 17, 23, 0.55)' : 'rgba(244, 246, 249, 0.55)',
           borderBottom: '1px solid',
-          borderColor: theme === 'dark' ? 'rgba(93, 112, 127, 0.2)' : 'rgba(93, 112, 127, 0.15)',
+          borderColor: theme === 'dark' ? 'rgba(93, 112, 127, 0.15)' : 'rgba(93, 112, 127, 0.12)',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
         }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14 sm:h-16">

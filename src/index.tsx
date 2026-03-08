@@ -1,4 +1,5 @@
 import '@fontsource-variable/geist';
+import 'lenis/dist/lenis.css';
 import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import ReactDOM from 'react-dom/client';
