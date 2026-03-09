@@ -99,7 +99,8 @@ export default async function handler(
 
     if (error) {
       console.error("Resend error:", error);
-      res.status(500).json({ error: "Failed to send message. Please try again." });
+      const msg = (error as { message?: string })?.message || "Failed to send message.";
+      res.status(500).json({ error: msg });
       return;
     }
 
