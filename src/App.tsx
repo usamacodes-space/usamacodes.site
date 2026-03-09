@@ -72,6 +72,9 @@ const App: React.FC = () => {
   const [contactEmail, setContactEmail] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [contactStep, setContactStep] = useState(1);
+  const [contactSending, setContactSending] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState(false);
+  const [contactError, setContactError] = useState<string | null>(null);
 
   const online = useOnline();
   const reducedMotion = useReducedMotion();
@@ -95,13 +98,36 @@ const App: React.FC = () => {
     { id: 'message', label: "Tell me about your project", value: contactMessage, setValue: setContactMessage, placeholder: "I'd like to discuss..." },
   ] as const;
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio Contact from ${contactName || 'Visitor'}`);
-    const body = encodeURIComponent(
-      `${contactMessage}\n\n---\nFrom: ${contactName || 'Unknown'} (${contactEmail || 'No email'})`
-    );
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    if (!canSubmit || contactSending) return;
+    setContactSending(true);
+    setContactError(null);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: contactName.trim(),
+          email: contactEmail.trim(),
+          message: contactMessage.trim(),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setContactSuccess(true);
+        setContactName('');
+        setContactEmail('');
+        setContactMessage('');
+        setContactStep(1);
+      } else {
+        setContactError(data?.error || 'Failed to send message. Please try again.');
+      }
+    } catch {
+      setContactError('Network error. Please check your connection and try again.');
+    } finally {
+      setContactSending(false);
+    }
   };
 
   const canProceedName = contactName.trim().length >= 2;
@@ -575,72 +601,127 @@ const App: React.FC = () => {
                     </p>
                   </div>
 
-                  <BentoCard hover={false} className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
-                    <form onSubmit={handleContactSubmit}>
-                      {CONTACT_STEPS.map((step, i) => {
-                        if (contactStep !== i + 1) return null;
-                        const isTextarea = step.id === 'message';
-                        return (
-                          <div key={step.id} className="space-y-4 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
-                            <label htmlFor={`contact-${step.id}`} className="block text-sm font-medium" style={{ color: 'var(--brand-light)' }}>
-                              {step.label}
-                            </label>
-                            {isTextarea ? (
-                              <TextField
-                                id={`contact-${step.id}`}
-                                placeholder={step.placeholder}
-                                value={step.value}
-                                onChange={(e) => step.setValue(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    if (contactStep < 3) handleContactNext();
-                                    else (e.target as HTMLElement).closest('form')?.requestSubmit();
-                                  }
-                                }}
-                                multiline
-                                minRows={3}
-                                fullWidth
-                                variant="outlined"
-                                size="small"
-                              />
-                            ) : (
-                              <TextField
-                                id={`contact-${step.id}`}
-                                type={step.id === 'email' ? 'email' : 'text'}
-                                placeholder={step.placeholder}
-                                value={step.value}
-                                onChange={(e) => step.setValue(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleContactNext()}
-                                fullWidth
-                                variant="outlined"
-                                size="small"
-                              />
-                            )}
-                          </div>
-                        );
-                      })}
-
-                      <div className="flex items-center justify-between gap-3 mt-5 pt-3" style={{ borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)'}` }}>
-                        <Button variant="text" size="small" onClick={handleContactBack} sx={{ visibility: contactStep === 1 ? 'hidden' : 'visible', minHeight: 36 }}>Back</Button>
-                        <div className="flex items-center gap-2">
-                          {[1, 2, 3].map((n) => (
-                            <span key={n} className="w-1.5 h-1.5 rounded-full transition-colors" style={{ backgroundColor: contactStep >= n ? '#f97316' : (isDark ? 'rgba(93,112,127,0.4)' : 'rgba(93,112,127,0.25)') }} />
-                          ))}
+                  {contactSuccess ? (
+                    <BentoCard hover={false} className="bento-animate" sx={{ p: { xs: 2, sm: 3 } }}>
+                      <div className="text-center py-4">
+                        <div
+                          className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
+                          style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)' }}
+                        >
+                          <ShieldCheck size={24} style={{ color: '#22c55e' }} />
                         </div>
-                        {contactStep < 3 ? (
-                          <Button variant="contained" size="small" onClick={handleContactNext} disabled={(contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)} sx={{ minHeight: 36 }}>Next</Button>
-                        ) : (
-                          <Button type="submit" variant="contained" size="small" disabled={!canSubmit} sx={{ minHeight: 36 }}>
-                            Send <Send size={14} style={{ marginLeft: 6 }} />
-                          </Button>
-                        )}
+                        <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--brand-light)' }}>
+                          Message sent!
+                        </h3>
+                        <p className="text-xs mb-4" style={{ color: 'var(--brand-slate-light)' }}>
+                          Thanks for reaching out. I'll get back to you soon at your email.
+                        </p>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => setContactSuccess(false)}
+                          sx={{ fontSize: '0.75rem' }}
+                        >
+                          Send another message
+                        </Button>
                       </div>
-                    </form>
-                  </BentoCard>
+                    </BentoCard>
+                  ) : (
+                    <BentoCard hover={false} className="bento-animate" sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
+                      <form onSubmit={handleContactSubmit}>
+                        {CONTACT_STEPS.map((step, i) => {
+                          if (contactStep !== i + 1) return null;
+                          const isTextarea = step.id === 'message';
+                          return (
+                            <div key={step.id} className="space-y-4 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
+                              <label htmlFor={`contact-${step.id}`} className="block text-sm font-medium" style={{ color: 'var(--brand-light)' }}>
+                                {step.label} <span style={{ color: '#f97316' }}>*</span>
+                              </label>
+                              {isTextarea ? (
+                                <TextField
+                                  id={`contact-${step.id}`}
+                                  placeholder={step.placeholder}
+                                  value={step.value}
+                                  onChange={(e) => step.setValue(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                      e.preventDefault();
+                                      if (contactStep < 3) handleContactNext();
+                                      else (e.target as HTMLElement).closest('form')?.requestSubmit();
+                                    }
+                                  }}
+                                  multiline
+                                  minRows={3}
+                                  fullWidth
+                                  variant="outlined"
+                                  size="small"
+                                  required
+                                  disabled={contactSending}
+                                  helperText="Min 10 characters"
+                                />
+                              ) : (
+                                <TextField
+                                  id={`contact-${step.id}`}
+                                  type={step.id === 'email' ? 'email' : 'text'}
+                                  placeholder={step.placeholder}
+                                  value={step.value}
+                                  onChange={(e) => step.setValue(e.target.value)}
+                                  onKeyDown={(e) => e.key === 'Enter' && handleContactNext()}
+                                  fullWidth
+                                  variant="outlined"
+                                  size="small"
+                                  required
+                                  disabled={contactSending}
+                                  helperText={step.id === 'name' ? 'Min 2 characters' : 'We\'ll reply to this email'}
+                                />
+                              )}
+                            </div>
+                          );
+                        })}
+
+                        {contactError && (
+                          <div
+                            className="mt-3 px-3 py-2 rounded-lg text-xs"
+                            style={{
+                              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                              border: '1px solid rgba(239, 68, 68, 0.3)',
+                              color: '#ef4444',
+                            }}
+                          >
+                            {contactError}
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between gap-3 mt-5 pt-3" style={{ borderTop: `1px solid ${isDark ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.12)'}` }}>
+                          <Button variant="text" size="small" onClick={handleContactBack} disabled={contactSending} sx={{ visibility: contactStep === 1 ? 'hidden' : 'visible', minHeight: 36 }}>Back</Button>
+                          <div className="flex items-center gap-2">
+                            {[1, 2, 3].map((n) => (
+                              <span key={n} className="w-1.5 h-1.5 rounded-full transition-colors" style={{ backgroundColor: contactStep >= n ? '#f97316' : (isDark ? 'rgba(93,112,127,0.4)' : 'rgba(93,112,127,0.25)') }} />
+                            ))}
+                          </div>
+                          {contactStep < 3 ? (
+                            <Button variant="contained" size="small" onClick={handleContactNext} disabled={contactSending || (contactStep === 1 && !canProceedName) || (contactStep === 2 && !canProceedEmail)} sx={{ minHeight: 36 }}>Next</Button>
+                          ) : (
+                            <Button type="submit" variant="contained" size="small" disabled={!canSubmit || contactSending} sx={{ minHeight: 36 }}>
+                              {contactSending ? (
+                                <>
+                                  <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin mr-1.5" />
+                                  Sending...
+                                </>
+                              ) : (
+                                <>
+                                  Send <Send size={14} style={{ marginLeft: 6 }} />
+                                </>
+                              )}
+                            </Button>
+                          )}
+                        </div>
+                      </form>
+                    </BentoCard>
+                  )}
 
                   <p className="mt-3 text-center text-[10px] sm:text-xs" style={{ color: 'var(--brand-slate-light)' }}>
-                    Opens your email client
+                    Your message will be sent directly to Usama
                     <span className="mx-2 opacity-40">·</span>
                     <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: '#f97316' }}>{CONTACT_EMAIL}</a>
                   </p>
