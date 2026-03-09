@@ -306,8 +306,8 @@ const App: React.FC = () => {
           className="flex-1 overflow-y-auto lenis lenis-smooth"
           style={{ outline: 'none' }}
         >
-          <div ref={contentRef} className="lenis-content" tabIndex={-1} style={{ outline: 'none' }}>
-          <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col min-h-full">
+          <div ref={contentRef} className="lenis-content min-h-full flex flex-col" tabIndex={-1} style={{ outline: 'none' }}>
+          <div ref={sectionRef} className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col flex-1">
 
             {/* === START TAB === */}
             {activeTab === 'start' && (

@@ -88,6 +88,8 @@ input:focus, textarea:focus, button:focus-visible { outline: none; }
 input:focus, textarea:focus { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4); border-radius: inherit; }
 .chat-input-wrap:focus-within { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4); }
 .chat-input-wrap input:focus { box-shadow: none; }
+.MuiOutlinedInput-root input:focus,
+.MuiOutlinedInput-root textarea:focus { box-shadow: none !important; }
 button:focus-visible { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.5); }
 button:active:not(:disabled) { transform: scale(0.98); }
 a { transition: color 0.2s ease, background-color 0.2s ease; }
