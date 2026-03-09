@@ -661,7 +661,7 @@ const App: React.FC = () => {
           >
             <div className="max-w-xl mx-auto">
               <div
-                className="rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
+                className="chat-input-wrap rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
                 style={{
                   border: '1px solid rgba(93, 112, 127, 0.25)',
                   backgroundColor: 'rgba(93, 112, 127, 0.08)',
