@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 
 const RATE_LIMIT_MS = 5000;
-const TO_EMAIL = "y6o18@students.keele.ac.uk";
+const TO_EMAIL = "hello@usamacodes.space";
 
 const ipLastRequest = new Map<string, number>();
 
@@ -68,7 +68,7 @@ export default async function handler(
 
   try {
     const { error } = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>",
+      from: "Portfolio Contact <noreply@usamacodes.space>",
       to: TO_EMAIL,
       replyTo: email.trim(),
       subject: `Portfolio Contact from ${name.trim()}`,
