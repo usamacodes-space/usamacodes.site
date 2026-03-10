@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 
 const RATE_LIMIT_MS = 5000;
-const TO_EMAIL = "hello@usamacodes.space";
+const TO_EMAIL = "y6o18@students.keele.ac.uk";
 
 const ipLastRequest = new Map<string, number>();
 
@@ -99,8 +99,7 @@ export default async function handler(
 
     if (error) {
       console.error("Resend error:", error);
-      const msg = (error as { message?: string })?.message || "Failed to send message.";
-      res.status(500).json({ error: msg });
+      res.status(500).json({ error: "Failed to send message. Please try again later." });
       return;
     }
 
