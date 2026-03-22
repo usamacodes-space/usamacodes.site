@@ -2,8 +2,9 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 
 const RATE_LIMIT_MS = 5000;
-const TO_EMAIL =
-  process.env.CONTACT_TO_EMAIL?.trim() || "ilove300ak47@gmail.com";
+/** Inbox where you receive visitor messages (override with CONTACT_TO_EMAIL in Vercel if needed). */
+const DEFAULT_INBOX = "hello@usamacodes.space";
+const TO_EMAIL = process.env.CONTACT_TO_EMAIL?.trim() || DEFAULT_INBOX;
 
 const ipLastRequest = new Map<string, number>();
 
@@ -66,36 +67,48 @@ export default async function handler(
   }
 
   const resend = new Resend(apiKey);
+  const safeName = name.trim().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const safeEmail = email.trim().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const safeMessage = message.trim().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const submittedAt = new Date().toISOString();
 
   try {
     const { error } = await resend.emails.send({
       from: "Portfolio Contact <noreply@usamacodes.space>",
       to: TO_EMAIL,
       replyTo: email.trim(),
-      subject: `Portfolio Contact from ${name.trim()}`,
+      subject: `[Portfolio] Message from ${name.trim()}`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #f97316, #ea580c); padding: 24px; border-radius: 12px 12px 0 0;">
-            <h2 style="margin: 0; color: #fff; font-size: 20px;">New Portfolio Message</h2>
+            <h2 style="margin: 0; color: #fff; font-size: 20px;">New visitor message</h2>
+            <p style="margin: 8px 0 0; color: rgba(255,255,255,0.9); font-size: 13px;">usamacodes.space contact form</p>
           </div>
           <div style="background: #fff; padding: 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+            <p style="margin: 0 0 16px; color: #374151; font-size: 14px;"><strong>Visitor details</strong></p>
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
-                <td style="padding: 8px 0; color: #6b7280; font-size: 14px; width: 80px; vertical-align: top;"><strong>Name</strong></td>
-                <td style="padding: 8px 0; color: #1f2937; font-size: 14px;">${name.trim()}</td>
+                <td style="padding: 8px 0; color: #6b7280; font-size: 14px; width: 100px; vertical-align: top;"><strong>Name</strong></td>
+                <td style="padding: 8px 0; color: #1f2937; font-size: 14px;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #6b7280; font-size: 14px; vertical-align: top;"><strong>Email</strong></td>
-                <td style="padding: 8px 0; font-size: 14px;"><a href="mailto:${email.trim()}" style="color: #f97316;">${email.trim()}</a></td>
+                <td style="padding: 8px 0; font-size: 14px;"><a href="mailto:${safeEmail}" style="color: #f97316;">${safeEmail}</a> <span style="color:#9ca3af;font-size:12px;">(Reply goes here)</span></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #6b7280; font-size: 14px; vertical-align: top;"><strong>Submitted</strong></td>
+                <td style="padding: 8px 0; color: #1f2937; font-size: 13px;">${submittedAt}</td>
               </tr>
             </table>
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
-            <div style="color: #1f2937; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message.trim().replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+            <p style="margin: 0 0 8px; color: #6b7280; font-size: 13px;"><strong>Message</strong></p>
+            <div style="color: #1f2937; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${safeMessage}</div>
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
-            <p style="color: #9ca3af; font-size: 12px; margin: 0;">Sent from your portfolio at usamacodes.space</p>
+            <p style="color: #9ca3af; font-size: 12px; margin: 0;">Sent from the contact form at usamacodes.space · Delivered to ${TO_EMAIL}</p>
           </div>
         </div>
       `,
+      text: `New visitor message (usamacodes.space)\n\nName: ${name.trim()}\nEmail: ${email.trim()}\nSubmitted: ${submittedAt}\n\n---\n\n${message.trim()}\n`,
     });
 
     if (error) {
