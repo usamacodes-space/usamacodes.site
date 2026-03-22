@@ -2,7 +2,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Resend } from "resend";
 
 const RATE_LIMIT_MS = 5000;
-const TO_EMAIL = "hello@usamacodes.space";
+const TO_EMAIL =
+  process.env.CONTACT_TO_EMAIL?.trim() || "ilove300ak47@gmail.com";
 
 const ipLastRequest = new Map<string, number>();
 
