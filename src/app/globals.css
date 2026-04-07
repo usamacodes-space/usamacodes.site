@@ -1,0 +1,246 @@
+@import 'lenis/dist/lenis.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root, [data-theme="dark"] {
+  --brand-bg: #0f1117;
+  --brand-slate: #5d707f;
+  /* Vite-era secondary text (PROJECT_LOG palette) */
+  --brand-slate-light: #9ca8b8;
+  --brand-accent: #f97316;
+  --brand-light: #ecebf3;
+  --radius: 1rem;
+  --studio-grid-opacity: 0.38;
+  --bento-surface: rgba(93, 112, 127, 0.06);
+  --bento-border: rgba(93, 112, 127, 0.18);
+  --bento-shadow: 0 4px 30px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --bento-shadow-hover: 0 8px 32px rgba(249, 115, 22, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --panel-surface: rgba(93, 112, 127, 0.06);
+  --panel-border: rgba(93, 112, 127, 0.22);
+  --panel-header-bg: rgba(93, 112, 127, 0.07);
+  --icon-well-bg: rgba(249, 115, 22, 0.08);
+  --icon-well-border: rgba(249, 115, 22, 0.15);
+  --chip-muted-bg: rgba(93, 112, 127, 0.1);
+  --input-well-bg: rgba(93, 112, 127, 0.08);
+  --input-well-border: rgba(93, 112, 127, 0.25);
+  --panel-shell-shadow: 0 12px 48px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --panel-backdrop: blur(20px) saturate(1.35);
+  --bento-skeleton: rgba(93, 112, 127, 0.14);
+}
+
+[data-theme="light"] {
+  --brand-bg: #f4f6f9;
+  --brand-slate: #6b7c8d;
+  --brand-slate-light: #4a5568;
+  --brand-accent: #ea580c;
+  --brand-light: #1a1d24;
+  --studio-grid-opacity: 0.26;
+  /* Surfaces: strong contrast on light gray page bg */
+  --bento-surface: #ffffff;
+  --bento-border: rgba(15, 23, 42, 0.11);
+  --bento-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 18px rgba(15, 23, 42, 0.07);
+  --bento-shadow-hover: 0 4px 14px rgba(234, 88, 12, 0.12), 0 2px 8px rgba(15, 23, 42, 0.06);
+  --panel-surface: rgba(255, 255, 255, 0.97);
+  --panel-border: rgba(15, 23, 42, 0.1);
+  --panel-header-bg: rgba(248, 250, 252, 0.95);
+  --icon-well-bg: rgba(234, 88, 12, 0.1);
+  --icon-well-border: rgba(234, 88, 12, 0.28);
+  --chip-muted-bg: rgba(71, 85, 105, 0.1);
+  --input-well-bg: rgba(255, 255, 255, 0.95);
+  --input-well-border: rgba(15, 23, 42, 0.12);
+  --panel-shell-shadow: 0 10px 44px rgba(15, 23, 42, 0.09), 0 2px 8px rgba(15, 23, 42, 0.04);
+  --panel-backdrop: none;
+  --bento-skeleton: rgba(71, 85, 105, 0.11);
+}
+
+/* Tab column: top-align all tab shells */
+main#main-content .portfolio-main-column {
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+}
+
+/* Same DOM for every tab; inline styles + this guard beat stale `items-start justify-center` wrappers */
+main#main-content .tab-panel-layout {
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  align-content: flex-start !important;
+}
+
+/* Legacy / cached bundles only */
+main#main-content .flex.flex-col.items-start.justify-center {
+  justify-content: flex-start !important;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    font-size: 14px;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  html {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+  }
+  [tabindex="-1"]:focus,
+  .lenis:focus,
+  .lenis-content:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 8px;
+  z-index: 99999;
+  padding: 8px 16px;
+  background: #f97316;
+  color: white;
+  font-family: inherit;
+  border-radius: 8px;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--brand-bg); }
+::-webkit-scrollbar-thumb { background: var(--brand-slate-light); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #6d7f8f; }
+
+@layer utilities {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-down {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes typing-dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.15); }
+    50% { box-shadow: 0 0 32px rgba(249, 115, 22, 0.25); }
+  }
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); transform: scale(1); }
+    50% { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); transform: scale(1.1); }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
+  .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
+  .animate-fade-in-down { animation: fade-in-down 0.5s ease-out forwards; }
+  .animate-scale-in { animation: scale-in 0.3s ease-out forwards; }
+  .animate-typing-dot { animation: typing-dot 1.4s ease-in-out infinite; }
+  .animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+  .animate-blob { animation: blob 7s ease-in-out infinite; }
+  .animate-live-pulse { animation: live-pulse 1.5s ease-in-out infinite; }
+  .animate-slide-in-right { animation: slide-in-right 0.45s ease-out forwards; }
+  .animation-delay-2000 { animation-delay: 2s; }
+  .animation-delay-4000 { animation-delay: 4s; }
+}
+
+input, textarea, button { transition: all 0.2s ease; }
+input:focus, textarea:focus, button:focus-visible { outline: none; }
+input:focus, textarea:focus { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4); border-radius: inherit; }
+.chat-input-wrap:focus-within { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4); }
+.chat-input-wrap input:focus { box-shadow: none; }
+.MuiOutlinedInput-root input:focus,
+.MuiOutlinedInput-root textarea:focus { box-shadow: none !important; }
+button:focus-visible { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.5); }
+button:active:not(:disabled) { transform: scale(0.98); }
+a { transition: color 0.2s ease, background-color 0.2s ease; }
+
+@media (max-width: 767px) {
+  :root {
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+  button, a, [role="button"] { touch-action: manipulation; }
+  .break-words-mobile {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Must stay last: forces the single tab shell under .portfolio-main-column to top-align.
+ * Fixes Education when DOM still shows `items-start justify-center` (class cannot beat !important here).
+ * Does not break Contact — form centering is inside nested ContactPanel, not this direct child.
+ */
+main#main-content .portfolio-main-column > div.flex-1.flex-col {
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  align-content: flex-start !important;
+}
+
+/* FAQ: MUI AccordionSummary is a <button>; theme padding can lose to ButtonBase — force comfortable insets */
+button.faq-accordion-summary.MuiAccordionSummary-root {
+  padding-left: 1.75rem !important;
+  padding-right: 1.5rem !important;
+}
+@media (min-width: 600px) {
+  button.faq-accordion-summary.MuiAccordionSummary-root {
+    padding-left: 2rem !important;
+    padding-right: 1.75rem !important;
+  }
+}
+
+.faq-accordion-details.MuiAccordionDetails-root {
+  padding-left: 1.75rem !important;
+  padding-right: 1.5rem !important;
+}
+@media (min-width: 600px) {
+  .faq-accordion-details.MuiAccordionDetails-root {
+    padding-left: 2rem !important;
+    padding-right: 1.75rem !important;
+  }
+}
+
+/* Indent answer under question copy (after icon + gap + micro nudge) */
+.faq-accordion-answer {
+  padding-left: 1.875rem;
+}
+@media (min-width: 600px) {
+  .faq-accordion-answer {
+    padding-left: 2rem;
+  }
+}

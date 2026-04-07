@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 
 export function useOnline(): boolean {
-  const [online, setOnline] = useState(typeof navigator !== "undefined" ? navigator.onLine : true);
+  // Fixed initial state avoids SSR/client hydration mismatch (e.g. Lighthouse / offline API).
+  const [online, setOnline] = useState(true);
 
   useEffect(() => {
+    setOnline(navigator.onLine);
     const onOnline = () => setOnline(true);
     const onOffline = () => setOnline(false);
     window.addEventListener("online", onOnline);

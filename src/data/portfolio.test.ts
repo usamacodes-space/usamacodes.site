@@ -4,6 +4,7 @@ import {
   EDUCATION,
   EXPERIENCE,
   FAQ_ITEMS,
+  FUN_BUILDS,
   PORTFOLIO_URL,
   PROJECTS,
   RESUME_URL,
@@ -55,6 +56,16 @@ describe('portfolio data', () => {
     });
   });
 
+  it('has fun builds with live URLs', () => {
+    expect(FUN_BUILDS.length).toBeGreaterThanOrEqual(1);
+    FUN_BUILDS.forEach((b) => {
+      expect(b).toHaveProperty('title');
+      expect(b).toHaveProperty('description');
+      expect(b).toHaveProperty('url');
+      expect(b.url).toMatch(/^https?:\/\//);
+    });
+  });
+
   it('getPortfolioContextForAI returns a string containing key data', () => {
     const context = getPortfolioContextForAI();
     expect(typeof context).toBe('string');
@@ -65,6 +76,11 @@ describe('portfolio data', () => {
     FAQ_ITEMS.forEach((faq) => {
       expect(context).toContain(faq.question);
       expect(context).toContain(faq.answer);
+    });
+    expect(context).toContain('PROJECTS FOR FUN');
+    FUN_BUILDS.forEach((b) => {
+      expect(context).toContain(b.title);
+      expect(context).toContain(b.url);
     });
   });
 });

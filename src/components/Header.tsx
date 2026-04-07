@@ -11,6 +11,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import React, { useState } from 'react';
+import { AvatarImage } from './AvatarImage';
 import { NAV_ITEMS, RESUME_URL, SOCIAL_LINKS } from '../constants';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -31,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const actionIconSize = 17;
 
   const handleNav = (id: string) => {
     setActiveTab(id);
@@ -50,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
           boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
         }}
       >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-14 sm:h-16">
+        <div className="max-w-6xl mx-auto flex items-center px-3 py-3 min-h-14 sm:min-h-16 gap-3 md:gap-5">
           {/* Left: hamburger (mobile) + logo */}
           <div className="flex items-center gap-3">
             <IconButton
@@ -61,43 +63,59 @@ export const Header: React.FC<HeaderProps> = ({
               <Menu size={20} />
             </IconButton>
             <button
-              onClick={() => handleNav('about')}
-              className="flex items-center gap-2.5 group"
+              type="button"
+              onClick={() => handleNav('start')}
+              className="flex items-center gap-2.5 group text-left rounded-lg -m-1 p-1 focus-visible:ring-2 focus-visible:ring-[#f97316]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+              aria-label="Usama Shafique — go to Start"
             >
-              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-transparent group-hover:border-[#f97316]/50 transition-colors">
-                <img
-                  src="/avatar.jpg"
-                  alt="Usama Shafique"
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-transparent group-hover:border-[#f97316]/50 transition-colors shrink-0">
+                <AvatarImage
+                  size={32}
+                  priority
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const t = e.target as HTMLImageElement;
-                    if (!t.src.includes('ui-avatars.com'))
-                      t.src = 'https://ui-avatars.com/api/?name=Usama+Shafique&size=64&background=0f1117&color=f97316';
-                  }}
+                  sizes="32px"
+                />
+                <span
+                  className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#f97316] ring-2 ring-[var(--brand-bg)] animate-live-pulse"
+                  title="Available"
+                  aria-hidden
                 />
               </div>
-              <span
-                className="font-semibold text-sm tracking-tight"
-                style={{ color: theme === 'dark' ? '#ecebf3' : '#1a1d24' }}
-              >
-                Usama Shafique
+              <span className="flex flex-col min-w-0">
+                <span
+                  className="font-semibold text-sm tracking-tight leading-tight"
+                  style={{ color: theme === 'dark' ? '#ecebf3' : '#1a1d24' }}
+                >
+                  Usama Shafique
+                </span>
+                <span
+                  className="text-[10px] font-medium tracking-wide uppercase opacity-70 truncate"
+                  style={{ color: theme === 'dark' ? '#9ca8b8' : '#6b7c8d' }}
+                >
+                  Software Engineer
+                </span>
               </span>
             </button>
           </div>
 
           {/* Center: nav tabs (desktop) */}
-          <Box component="nav" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5 }} aria-label="Main navigation">
+          <Box
+            component="nav"
+            sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5, flex: 1, justifyContent: 'center' }}
+            aria-label="Main navigation"
+          >
             {NAV_ITEMS.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
+                  type="button"
                   key={item.id}
                   onClick={() => handleNav(item.id)}
-                  className="relative px-3.5 py-2 rounded-lg text-[13px] font-medium transition-colors"
+                  className="relative px-3.5 py-2 rounded-lg text-[13px] font-medium transition-colors hover:text-[#f97316] focus-visible:ring-2 focus-visible:ring-[#f97316]/45"
                   style={{
                     color: isActive
                       ? '#f97316'
-                      : theme === 'dark' ? '#b5c1d2' : '#6b7c8d',
+                      : theme === 'dark' ? '#9ca8b8' : '#6b7c8d',
                     backgroundColor: isActive
                       ? (theme === 'dark' ? 'rgba(249, 115, 22, 0.1)' : 'rgba(234, 88, 12, 0.08)')
                       : 'transparent',
@@ -111,22 +129,22 @@ export const Header: React.FC<HeaderProps> = ({
           </Box>
 
           {/* Right: actions */}
-          <div className="flex items-center gap-1">
+          <div className="ml-auto flex items-center gap-1 p-1 shrink-0">
+            <IconButton
+              onClick={onOpenSettings}
+              size="small"
+              aria-label="Settings"
+              sx={{ color: 'text.secondary', display: { xs: 'none', sm: 'inline-flex' }, mr: 0.5 }}
+            >
+              <Settings size={actionIconSize} />
+            </IconButton>
             <IconButton
               onClick={toggleTheme}
               size="small"
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               sx={{ color: 'text.secondary' }}
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </IconButton>
-            <IconButton
-              onClick={onOpenSettings}
-              size="small"
-              aria-label="Settings"
-              sx={{ color: 'text.secondary', display: { xs: 'none', sm: 'inline-flex' } }}
-            >
-              <Settings size={18} />
+              {theme === 'dark' ? <Sun size={actionIconSize} /> : <Moon size={actionIconSize} />}
             </IconButton>
             <Box
               component="a"
@@ -146,11 +164,15 @@ export const Header: React.FC<HeaderProps> = ({
                 color: '#f97316',
                 border: '1px solid rgba(249, 115, 22, 0.3)',
                 textDecoration: 'none',
-                transition: 'background-color 0.2s',
+                transition: 'background-color 0.2s, box-shadow 0.2s',
                 '&:hover': { bgcolor: 'rgba(249, 115, 22, 0.06)' },
+                '&:focus-visible': {
+                  outline: 'none',
+                  boxShadow: '0 0 0 2px rgba(249, 115, 22, 0.55), 0 0 0 4px rgba(249, 115, 22, 0.15)',
+                },
               }}
             >
-              <FileDown size={14} /> Resume
+              <FileDown size={actionIconSize} /> Resume
             </Box>
           </div>
         </div>
@@ -172,30 +194,30 @@ export const Header: React.FC<HeaderProps> = ({
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* Drawer header */}
-          <div className="p-4 flex items-center justify-between" style={{ borderBottom: `1px solid ${theme === 'dark' ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.15)'}` }}>
+          <div className="p-4 flex items-start justify-start gap-4" style={{ borderBottom: `1px solid ${theme === 'dark' ? 'rgba(93,112,127,0.2)' : 'rgba(93,112,127,0.15)'}` }}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden">
-                <img
-                  src="/avatar.jpg"
-                  alt="Usama Shafique"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const t = e.target as HTMLImageElement;
-                    if (!t.src.includes('ui-avatars.com'))
-                      t.src = 'https://ui-avatars.com/api/?name=Usama+Shafique&size=80&background=0f1117&color=f97316';
-                  }}
+              <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0">
+                <AvatarImage size={40} className="w-full h-full object-cover" sizes="40px" />
+                <span
+                  className="absolute bottom-0.5 right-0.5 w-2 h-2 rounded-full bg-[#f97316] ring-2 ring-[var(--brand-bg)] animate-live-pulse"
+                  aria-hidden
                 />
               </div>
               <div>
                 <div className="font-semibold text-sm" style={{ color: theme === 'dark' ? '#ecebf3' : '#1a1d24' }}>
                   Usama Shafique
                 </div>
-                <div className="text-[11px]" style={{ color: theme === 'dark' ? '#b5c1d2' : '#6b7c8d' }}>
+                <div className="text-[11px] font-medium uppercase tracking-wide opacity-80" style={{ color: theme === 'dark' ? '#9ca8b8' : '#6b7c8d' }}>
                   Software Engineer
                 </div>
               </div>
             </div>
-            <IconButton onClick={() => setDrawerOpen(false)} size="small" sx={{ color: 'text.secondary' }}>
+            <IconButton
+              onClick={() => setDrawerOpen(false)}
+              size="small"
+              sx={{ color: 'text.secondary', ml: 'auto', alignSelf: 'flex-start' }}
+              aria-label="Close menu"
+            >
               <X size={18} />
             </IconButton>
           </div>
@@ -210,7 +232,7 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => handleNav(item.id)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors"
                   style={{
-                    color: isActive ? '#f97316' : (theme === 'dark' ? '#b5c1d2' : '#4a5568'),
+                    color: isActive ? '#f97316' : (theme === 'dark' ? '#9ca8b8' : '#4a5568'),
                     backgroundColor: isActive ? (theme === 'dark' ? 'rgba(249,115,22,0.1)' : 'rgba(234,88,12,0.08)') : 'transparent',
                     minHeight: 44,
                   }}
@@ -231,7 +253,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => { setIsSnowing(!isSnowing); }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors"
               style={{
-                color: isSnowing ? '#f97316' : (theme === 'dark' ? '#b5c1d2' : '#4a5568'),
+                color: isSnowing ? '#f97316' : (theme === 'dark' ? '#9ca8b8' : '#4a5568'),
                 backgroundColor: isSnowing ? (theme === 'dark' ? 'rgba(249,115,22,0.1)' : 'rgba(234,88,12,0.08)') : 'transparent',
                 minHeight: 44,
               }}
@@ -242,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => { toggleTheme(); }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors"
-              style={{ color: theme === 'dark' ? '#b5c1d2' : '#4a5568', minHeight: 44 }}
+              style={{ color: theme === 'dark' ? '#9ca8b8' : '#4a5568', minHeight: 44 }}
             >
               {theme === 'dark' ? <Sun size={16} className="opacity-70" /> : <Moon size={16} className="opacity-70" />}
               {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
@@ -250,7 +272,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => { onOpenSettings(); setDrawerOpen(false); }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors"
-              style={{ color: theme === 'dark' ? '#b5c1d2' : '#4a5568', minHeight: 44 }}
+              style={{ color: theme === 'dark' ? '#9ca8b8' : '#4a5568', minHeight: 44 }}
             >
               <Settings size={16} className="opacity-70" />
               Settings
@@ -274,7 +296,7 @@ export const Header: React.FC<HeaderProps> = ({
                   rel="noopener noreferrer"
                   aria-label={link.label}
                   className="p-2 rounded-lg transition-colors"
-                  style={{ color: theme === 'dark' ? '#b5c1d2' : '#4a5568' }}
+                  style={{ color: theme === 'dark' ? '#9ca8b8' : '#4a5568' }}
                 >
                   {React.cloneElement(link.icon as React.ReactElement<{ className?: string }>, { className: 'w-4 h-4' })}
                 </a>

@@ -2,19 +2,29 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const SNOW_REPEL_RADIUS = 80;
 const SNOW_REPEL_STRENGTH = 45;
-const LERP = 0.1;
+const LERP = 0.12;
 
-export const Snowfall: React.FC = () => {
-  const [flakes, setFlakes] = useState<{ id: number; left: string; duration: string; delay: string; size: string; opacity: number; blur: string; sway: string }[]>([]);
-  const [offsets, setOffsets] = useState<Record<number, { x: number; y: number }>>({});
-  const flakeRefs = useRef<(HTMLDivElement | null)[]>([]);
+type ThemeMode = 'dark' | 'light';
+
+export interface SnowfallProps {
+  theme?: ThemeMode;
+}
+
+export const Snowfall: React.FC<SnowfallProps> = ({ theme = 'dark' }) => {
+  const [flakes, setFlakes] = useState<
+    { id: number; left: string; duration: string; delay: string; size: string; opacity: number; blur: string; sway: string }[]
+  >([]);
+  const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const particleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
   const smoothRef = useRef<Record<number, { x: number; y: number }>>({});
 
   useEffect(() => {
-    const flakeCount = 120;
-    flakeRefs.current = [];
+    const narrow = typeof window !== 'undefined' && window.innerWidth < 768;
+    const flakeCount = narrow ? 70 : 120;
+    wrapperRefs.current = [];
+    particleRefs.current = [];
     const newFlakes = Array.from({ length: flakeCount }).map((_, i) => {
       const size = Math.random() * 4 + 1;
       const speed = 8 + Math.random() * 14;
@@ -37,40 +47,42 @@ export const Snowfall: React.FC = () => {
     const tick = () => {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
-      const target: Record<number, { x: number; y: number }> = {};
-      for (let i = 0; i < flakeRefs.current.length; i++) {
-        const el = flakeRefs.current[i];
-        if (!el) continue;
+      const particles = particleRefs.current;
+      const wrappers = wrapperRefs.current;
+      const smooth = smoothRef.current;
+
+      for (let i = 0; i < particles.length; i++) {
+        const el = particles[i];
+        const wrap = wrappers[i];
+        if (!el || !wrap) continue;
+
         const rect = el.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         const dx = cx - mx;
         const dy = cy - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
+
+        let tx = 0;
+        let ty = 0;
         if (dist < SNOW_REPEL_RADIUS && dist > 0) {
           const f = (1 - dist / SNOW_REPEL_RADIUS) * SNOW_REPEL_STRENGTH;
-          target[i] = { x: (dx / dist) * f, y: (dy / dist) * f };
-        } else {
-          target[i] = { x: 0, y: 0 };
+          tx = (dx / dist) * f;
+          ty = (dy / dist) * f;
         }
-      }
-      const smooth = smoothRef.current;
-      const next: Record<number, { x: number; y: number }> = {};
-      const allKeys = new Set([...Object.keys(target).map(Number), ...Object.keys(smooth).map(Number)]);
-      for (const i of allKeys) {
-        const t = target[i] ?? { x: 0, y: 0 };
+
         const s = smooth[i] ?? { x: 0, y: 0 };
-        const nx = s.x + (t.x - s.x) * LERP;
-        const ny = s.y + (t.y - s.y) * LERP;
-        next[i] = { x: nx, y: ny };
-        smooth[i] = next[i];
+        const nx = s.x + (tx - s.x) * LERP;
+        const ny = s.y + (ty - s.y) * LERP;
+        smooth[i] = { x: nx, y: ny };
+        wrap.style.transform = `translate3d(${nx}px, ${ny}px, 0)`;
       }
-      setOffsets({ ...next });
+
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => {
-      rafRef.current && cancelAnimationFrame(rafRef.current);
+      if (rafRef.current !== undefined) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -82,8 +94,14 @@ export const Snowfall: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouse);
   }, []);
 
+  const isLight = theme === 'light';
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden" aria-hidden>
+    <div
+      className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden snow-layer"
+      aria-hidden
+      data-snow-theme={isLight ? 'light' : 'dark'}
+    >
       <style>{`
         @keyframes snow-fall {
           0% { transform: translateY(-5vh) translateX(0) rotate(0deg); }
@@ -95,31 +113,40 @@ export const Snowfall: React.FC = () => {
         .snow-particle {
           position: absolute;
           top: -10px;
-          background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,255,255,0.95), rgba(255,255,255,0.6));
           border-radius: 50%;
-          box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
           animation: snow-fall ease-in-out infinite;
+          will-change: transform;
+        }
+        [data-snow-theme="dark"] .snow-particle {
+          background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,255,255,0.95), rgba(255,255,255,0.6));
+          box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+        }
+        [data-snow-theme="light"] .snow-particle {
+          background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(100,116,139,0.45), rgba(148,163,184,0.25));
+          box-shadow: 0 0 4px rgba(71, 85, 105, 0.25);
         }
         .snow-wrapper {
-          transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+          position: absolute;
+          top: 0;
+          will-change: transform;
         }
       `}</style>
-      {flakes.map((flake, i) => {
-        const off = offsets[flake.id] ?? { x: 0, y: 0 };
-        return (
+      {flakes.map((flake, i) => (
+        <div
+          key={flake.id}
+          ref={(r) => {
+            wrapperRefs.current[i] = r;
+          }}
+          className="snow-wrapper"
+          style={{ left: flake.left }}
+        >
           <div
-            key={flake.id}
-            className="snow-wrapper absolute"
-            style={{
-              left: flake.left,
-              top: 0,
-              transform: `translate(${off.x}px, ${off.y}px)`,
+            ref={(r) => {
+              particleRefs.current[i] = r;
             }}
-          >
-            <div
-              ref={(r) => { flakeRefs.current[i] = r; }}
-              className="snow-particle"
-              style={{
+            className="snow-particle"
+            style={
+              {
                 width: flake.size,
                 height: flake.size,
                 opacity: flake.opacity,
@@ -127,11 +154,11 @@ export const Snowfall: React.FC = () => {
                 animationDuration: flake.duration,
                 animationDelay: flake.delay,
                 ['--sway']: flake.sway,
-              } as React.CSSProperties}
-            />
-          </div>
-        );
-      })}
+              } as React.CSSProperties
+            }
+          />
+        </div>
+      ))}
     </div>
   );
 };

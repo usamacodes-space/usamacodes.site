@@ -1,20 +1,36 @@
 /** Single source of truth for portfolio data (no React/JSX – safe for Node/API). */
 
-import type { Experience as ExpType, Education as EduType } from "../types";
+import type { Experience as ExpType, Education as EduType, FunBuild } from "../types";
+import { SITE_EMAIL, SITE_HOST, SITE_URL } from "@/lib/site";
 
-export const CONTACT_EMAIL = "hello@usamacodes.space";
+export const CONTACT_EMAIL = SITE_EMAIL;
 export const RESUME_URL = "/resume.pdf";
 
 export const LINKEDIN_URL = "https://linkedin.com/in/usamacodes-space";
 export const GITHUB_URL = "https://github.com/usamacodes-space";
-export const PORTFOLIO_URL = "https://usamacodes.space";
+export const PORTFOLIO_URL = SITE_URL;
 
 /** Replace with project-specific repo URLs when available (e.g. https://github.com/usamacodes-space/qr-menu-saas). */
 export const PROJECTS = [
-  { title: "QR Menu SaaS", description: "Full-stack restaurant management platform featuring role-based dashboards, subscription billing, and dynamic QR menu generation.", tags: ["Next.js", "Express.js", "PostgreSQL", "Prisma"], icon: "QrCode", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
-  { title: "ChatDocs (AI Chat)", description: "Developed an AI-driven document chat system enabling users to upload files and interact through natural language via RAG.", tags: ["LangChain", "FastAPI", "Ollama", "Python"], icon: "MessageSquare", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
-  { title: "GX Tickets", description: "Backend development for a large-scale ticketing and event workflow system with robust security.", tags: ["NestJS", "PostgreSQL", "JWT", "Prisma"], icon: "Ticket", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
-  { title: "QuikTix", description: "Collaborative project focused on scalable backend architectures and real-world production constraints.", tags: ["Clean Architecture", "REST API", "Database Design"], icon: "Layout", sourceUrl: "https://github.com/usamacodes-space", demoUrl: "https://usamacodes.space" },
+  { title: "QR Menu SaaS", description: "Full-stack restaurant management platform featuring role-based dashboards, subscription billing, and dynamic QR menu generation.", tags: ["Next.js", "Express.js", "PostgreSQL", "Prisma"], icon: "QrCode", sourceUrl: "https://github.com/usamacodes-space", demoUrl: PORTFOLIO_URL },
+  { title: "ChatDocs (AI Chat)", description: "Developed an AI-driven document chat system enabling users to upload files and interact through natural language via RAG.", tags: ["LangChain", "FastAPI", "Ollama", "Python"], icon: "MessageSquare", sourceUrl: "https://github.com/usamacodes-space", demoUrl: PORTFOLIO_URL },
+  { title: "GX Tickets", description: "Backend development for a large-scale ticketing and event workflow system with robust security.", tags: ["NestJS", "PostgreSQL", "JWT", "Prisma"], icon: "Ticket", sourceUrl: "https://github.com/usamacodes-space", demoUrl: PORTFOLIO_URL },
+  { title: "QuikTix", description: "Collaborative project focused on scalable backend architectures and real-world production constraints.", tags: ["Clean Architecture", "REST API", "Database Design"], icon: "Layout", sourceUrl: "https://github.com/usamacodes-space", demoUrl: PORTFOLIO_URL },
+];
+
+/**
+ * Live demos and small products — add rows here (like an [Indie Page](https://indiepa.ge/marclou)).
+ * Each `url` should be a public link visitors can open to try the build.
+ */
+export const FUN_BUILDS: FunBuild[] = [
+  {
+    id: 'fun-builds:this-portfolio',
+    title: "This portfolio",
+    description: "Interactive terminal, AI Q&A, and the page you are on right now.",
+    url: PORTFOLIO_URL,
+    emoji: "✨",
+    status: "live",
+  },
 ];
 
 export const EXPERIENCE: ExpType[] = [
@@ -40,8 +56,8 @@ export const RESUME_CONTENT = `
 Usama Shafique
 Backend & AI-Integrated Software Engineer
 Location: Stoke-on-Trent, England, UK
-Email: hello@usamacodes.space
-Web: www.usamacodes.space
+Email: ${SITE_EMAIL}
+Web: www.${SITE_HOST}
 GitHub: github.com/usamacodes-space
 LinkedIn: linkedin.com/in/usamacodes-space
 
@@ -208,7 +224,7 @@ DEVOPS & TOOLS:
 - Currently based in Stoke-on-Trent, England, UK.
 - Open to remote, hybrid, or on-site roles within the UK.
 - Available for freelance/contract work alongside MSc studies.
-- Preferred communication: email (hello@usamacodes.space) or LinkedIn.
+- Preferred communication: email (${SITE_EMAIL}) or LinkedIn.
 - Languages: English (professional), Urdu (native).
 `;
 
@@ -221,6 +237,10 @@ export const FAQ_ITEMS = [
 
 export function getPortfolioContextForAI(): string {
   const faqBlock = FAQ_ITEMS.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n");
+  const funBlock =
+    FUN_BUILDS.length > 0
+      ? `\n\n=== PROJECTS FOR FUN (live demos) ===\n${FUN_BUILDS.map((b) => `${b.title} (${b.status ?? "live"}): ${b.description} — ${b.url}`).join("\n")}`
+      : "";
   return `${RESUME_CONTENT.trim()}
 
 === FAQ (use these answers when the question matches) ===
@@ -230,5 +250,5 @@ ${faqBlock}
 Email: ${CONTACT_EMAIL}
 Portfolio: ${PORTFOLIO_URL}
 LinkedIn: ${LINKEDIN_URL}
-GitHub: ${GITHUB_URL}`;
+GitHub: ${GITHUB_URL}${funBlock}`;
 }

@@ -1,6 +1,6 @@
 import { CONTACT_EMAIL, FAQ_ITEMS, PROJECTS } from "../constants";
 
-const DEBUG = import.meta.env.DEV;
+const DEBUG = process.env.NODE_ENV === 'development';
 const CHAT_COOLDOWN_MS = 2000;
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 500;
@@ -151,7 +151,7 @@ const PROMPT_MAPPINGS: { keywords: string[]; answer: string }[] = [
   {
     keywords: ["freelance", "hire", "available", "availability", "contract"],
     answer:
-      "I'm currently based in Stoke-on-Trent, UK, and available for freelance/contract work alongside my MSc studies. I'm open to remote, hybrid, or on-site roles within the UK. Best way to reach me is via email at hello@usamacodes.space or LinkedIn (linkedin.com/in/usamacodes-space). I speak English (professional) and Urdu (native).",
+      `I'm currently based in Stoke-on-Trent, UK, and available for freelance/contract work alongside my MSc studies. I'm open to remote, hybrid, or on-site roles within the UK. Best way to reach me is via email at ${CONTACT_EMAIL} or LinkedIn (linkedin.com/in/usamacodes-space). I speak English (professional) and Urdu (native).`,
   },
   {
     keywords: ["bs", "bachelor", "uet", "undergraduate", "software", "engineering"],
@@ -174,6 +174,15 @@ function ruleBasedQuery(prompt: string): string {
       words.some((w) => w.length >= 3 && (w.includes(k) || k.includes(w)))
     ).length;
     if (matchCount >= 2) return answer;
+  }
+
+  // Identity / intro — before FAQ so "Who are you?" doesn't match unrelated FAQ text
+  if (
+    (words.includes("who") && (words.includes("you") || words.includes("your"))) ||
+    words.includes("introduce") ||
+    words.includes("yourself")
+  ) {
+    return "I'm Usama Shafique, a Backend & AI-Integrated Software Engineer with 2+ years of experience, based in Stoke-on-Trent, UK. I specialize in building scalable Node.js systems with NestJS, PostgreSQL, and Docker, and integrating AI using LangChain, FastAPI, and Ollama. I'm currently pursuing an MSc in AI & Data Science at Keele University. Previously, I worked at FBM Solutions where I built high-availability APIs, real-time WebSocket systems, and migrated legacy services to modern architectures.";
   }
 
   let bestFaq = { score: 0, answer: "" };
@@ -214,10 +223,7 @@ function ruleBasedQuery(prompt: string): string {
   if (words.some((w) => ["project", "projects", "built", "portfolio", "showcase"].includes(w))) {
     return "I've built 4 major projects: (1) QR Menu SaaS — a full-stack restaurant management platform with Next.js, Express.js, PostgreSQL, and Stripe billing. (2) ChatDocs — an AI document chat system using LangChain, FastAPI, Ollama, and ChromaDB with RAG pipelines. (3) GX Tickets — an enterprise ticketing system with NestJS, JWT auth, Redis rate limiting, and audit trails. (4) QuikTix — a collaborative backend project focused on Clean Architecture with 80%+ test coverage. Ask about any specific project for detailed information!";
   }
-  if (
-    (words.some((w) => ["who", "about", "tell"].includes(w)) && words.length <= 6) ||
-    words.includes("introduce") || words.includes("yourself")
-  ) {
+  if (words.some((w) => ["who", "about", "tell"].includes(w)) && words.length <= 6) {
     return "I'm Usama Shafique, a Backend & AI-Integrated Software Engineer with 2+ years of experience, based in Stoke-on-Trent, UK. I specialize in building scalable Node.js systems with NestJS, PostgreSQL, and Docker, and integrating AI using LangChain, FastAPI, and Ollama. I'm currently pursuing an MSc in AI & Data Science at Keele University. Previously, I worked at FBM Solutions where I built high-availability APIs, real-time WebSocket systems, and migrated legacy services to modern architectures.";
   }
 

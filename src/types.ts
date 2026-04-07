@@ -21,3 +21,26 @@ export interface Education {
   /** e.g. "Current" for in-progress degree */
   badge?: string;
 }
+
+/** Small shipped ideas with public URLs (Indie Page–style list). */
+export interface FunBuild {
+  /** Stable identifier used for admin CRUD. */
+  id?: string;
+  title: string;
+  description: string;
+  url: string;
+  /** Optional thumbnail/screenshot URL shown in the public list. */
+  imageUrl?: string;
+  /** Shown in the tile — emoji or a single character */
+  emoji?: string;
+  status?: 'live' | 'wip' | 'idea';
+
+  /** Optional fields for internal testing (admin-only; not shown publicly). */
+  demoUsername?: string;
+  demoPassword?: string;
+  demoNotes?: string;
+
+  /** ISO timestamps (admin-only metadata). */
+  createdAt?: string;
+  updatedAt?: string;
+}

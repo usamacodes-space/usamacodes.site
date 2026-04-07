@@ -1,0 +1,88 @@
+{
+  "..\\node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
+    "id": 5139,
+    "files": [
+      "static/chunks/139.7a5a8e93a21948c1.js"
+    ]
+  },
+  "..\\node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
+    "id": 1646,
+    "files": [
+      "static/chunks/646.f342b7cffc01feb0.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./SearchTerminal": {
+    "id": 6257,
+    "files": [
+      "static/chunks/257.d80cea3687733a8b.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./Snowfall": {
+    "id": 3631,
+    "files": [
+      "static/chunks/631.3239a1679a47bd4d.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./ThreeScene": {
+    "id": 3757,
+    "files": [
+      "static/chunks/757.23d0a64d307fa15f.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./portfolio-tabs/AboutPanel": {
+    "id": 6533,
+    "files": [
+      "static/chunks/533.51ea1eab231b8038.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./portfolio-tabs/ContactPanel": {
+    "id": 6633,
+    "files": [
+      "static/chunks/510.09f644cbd4294a6c.js",
+      "static/chunks/633.b5c678a18712d6bd.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./portfolio-tabs/ExperiencePanel": {
+    "id": 9397,
+    "files": [
+      "static/chunks/397.038bf806f91627a8.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./portfolio-tabs/FaqPanel": {
+    "id": 7089,
+    "files": [
+      "static/chunks/89.157dc90ba17dd500.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./portfolio-tabs/FunBuildsPanel": {
+    "id": 2021,
+    "files": [
+      "static/chunks/21.4230e554ee57fa5f.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> ./portfolio-tabs/ProjectsPanel": {
+    "id": 9572,
+    "files": [
+      "static/chunks/572.bbc25b8e4a49a633.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> @vercel/analytics/react": {
+    "id": 7025,
+    "files": [
+      "static/chunks/25.5d440e23de55087b.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> @vercel/speed-insights/react": {
+    "id": 6117,
+    "files": [
+      "static/chunks/498.a9b1607ba7428df7.js"
+    ]
+  },
+  "components\\PortfolioClient.tsx -> gsap": {
+    "id": 7605,
+    "files": [
+      "static/chunks/c15bf2b0.f7282d455f9c4cd9.js",
+      "static/chunks/605.51bf487f77cfcccf.js"
+    ]
+  }
+}

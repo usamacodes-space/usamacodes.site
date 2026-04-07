@@ -18,6 +18,17 @@ export const ThreeScene: React.FC = () => {
           backgroundSize: '40px 40px',
         }}
       />
+      {/* Vite-era IDE grid overlay */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          opacity: 'var(--studio-grid-opacity, 0.38)',
+          backgroundImage: `linear-gradient(rgba(93, 112, 127, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(93, 112, 127, 0.09) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+          maskImage: 'radial-gradient(ellipse 85% 75% at 50% 18%, black 18%, transparent 72%)',
+        }}
+        aria-hidden
+      />
     </div>
   );
 };

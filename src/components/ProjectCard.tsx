@@ -10,7 +10,7 @@ interface ProjectCardProps {
 }
 
 const getIcon = (iconName?: string) => {
-  const props = { size: 20, style: { color: '#f97316' } };
+  const props = { size: 20, style: { color: 'var(--brand-accent)' } };
   switch (iconName) {
     case 'MessageSquare': return <MessageSquare {...props} />;
     case 'QrCode': return <QrCode {...props} />;
@@ -33,7 +33,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, featured }) =
     <div className="flex items-start justify-between gap-3 mb-3">
       <div
         className="p-2.5 rounded-xl shrink-0"
-        style={{ backgroundColor: 'rgba(249, 115, 22, 0.08)', border: '1px solid rgba(249, 115, 22, 0.15)' }}
+        style={{ backgroundColor: 'var(--icon-well-bg)', border: '1px solid var(--icon-well-border)' }}
       >
         {getIcon(project.icon)}
       </div>
@@ -42,7 +42,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, featured }) =
           href={project.demoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 p-1.5 rounded-lg transition-colors"
+          className="shrink-0 p-1.5 rounded-lg transition-colors hover:bg-[var(--chip-muted-bg)] focus-visible:ring-2 focus-visible:ring-[#f97316]/50"
           style={{ color: 'var(--brand-slate-light)' }}
           aria-label={`Visit ${project.title}`}
         >
@@ -68,7 +68,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, featured }) =
           sx={{
             fontSize: '0.65rem',
             height: 22,
-            borderColor: 'rgba(93,112,127,0.3)',
+            borderColor: 'var(--bento-border)',
             color: 'text.secondary',
           }}
         />
