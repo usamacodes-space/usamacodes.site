@@ -469,7 +469,7 @@ export default function PortfolioClient() {
                 onRequestFocusInput={() => { chatInputRef.current?.focus({ preventScroll: true }); }}
               />
               <div
-                className="chat-input-wrap relative z-[1] rounded-2xl flex items-center gap-2 pl-10 pr-3 py-2 sm:pl-12 sm:pr-4 sm:py-2.5 transition-all"
+                className="chat-input-wrap relative z-[1] rounded-2xl flex items-center gap-2 pl-3 pr-10 py-2 sm:pl-4 sm:pr-12 sm:py-2.5 transition-all"
                 style={{
                   border: '1px solid var(--input-well-border)',
                   backgroundColor: 'var(--input-well-bg)',
