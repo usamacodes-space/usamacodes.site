@@ -14,7 +14,6 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { queryPortfolio } from '../services/chat';
 import { AskComposerMascot } from './AskComposerMascot';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
-import { ClaudeMascot } from './ClaudeMascot';
 import { Header } from './Header';
 import { StartTabPlaceholder } from './StartTabPlaceholder';
 import EducationPanel from './portfolio-tabs/EducationPanel';
@@ -465,7 +464,6 @@ export default function PortfolioClient() {
           >
             <div className="max-w-xl mx-auto relative">
               <AskComposerMascot
-                isDark={isDark}
                 isAiBusy={isTyping}
                 reducedMotion={reducedMotion}
                 onRequestFocusInput={() => { chatInputRef.current?.focus({ preventScroll: true }); }}
@@ -479,7 +477,6 @@ export default function PortfolioClient() {
                   boxShadow: isDark ? 'none' : '0 1px 3px rgba(15, 23, 42, 0.06)',
                 }}
               >
-                <ClaudeMascot isTyping={isTyping} size={26} reducedMotion={reducedMotion} />
                 <input
                   ref={chatInputRef}
                   placeholder="Ask anything… (Enter)"

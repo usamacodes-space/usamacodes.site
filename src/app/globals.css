@@ -153,21 +153,6 @@ main#main-content .flex.flex-col.items-start.justify-center {
     from { opacity: 0; transform: translateX(8px); }
     to { opacity: 1; transform: translateX(0); }
   }
-  @keyframes claude-bob {
-    0%, 100% { transform: translateY(0) rotate(-4deg); }
-    50%      { transform: translateY(-2px) rotate(4deg); }
-  }
-  @keyframes claude-think {
-    0%   { transform: translateY(0) rotate(0deg) scale(1); }
-    25%  { transform: translateY(-1.5px) rotate(-10deg) scale(1.05); }
-    50%  { transform: translateY(0) rotate(0deg) scale(1); }
-    75%  { transform: translateY(-1.5px) rotate(10deg) scale(1.05); }
-    100% { transform: translateY(0) rotate(0deg) scale(1); }
-  }
-  @keyframes claude-blink {
-    0%, 92%, 100% { transform: scaleY(1); }
-    95%, 97%      { transform: scaleY(0.1); }
-  }
 
   .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
   .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
@@ -178,26 +163,12 @@ main#main-content .flex.flex-col.items-start.justify-center {
   .animate-blob { animation: blob 7s ease-in-out infinite; }
   .animate-live-pulse { animation: live-pulse 1.5s ease-in-out infinite; }
   .animate-slide-in-right { animation: slide-in-right 0.45s ease-out forwards; }
-  .animate-claude-bob { animation: claude-bob 3.2s ease-in-out infinite; transform-origin: 50% 60%; }
-  .animate-claude-think { animation: claude-think 1.1s ease-in-out infinite; transform-origin: 50% 60%; }
   .animation-delay-2000 { animation-delay: 2s; }
   .animation-delay-4000 { animation-delay: 4s; }
-
-  .claude-mascot .claude-mascot-eyes {
-    transform-origin: 24px 22px;
-    animation: claude-blink 5s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .animate-claude-bob,
-    .animate-claude-think,
-    .claude-mascot .claude-mascot-eyes { animation: none !important; }
-  }
 }
 
-/* Ask-bar corner mascot: Claude Code–style peering assistant + laptop */
+/* Ask-bar corner pixel mascot */
 .composer-mascot-anchor {
-  --composer-mascot-screen-s: rgba(6, 182, 212, 0.22);
-  --composer-mascot-screen-b: rgba(6, 182, 212, 0.48);
   position: absolute;
   left: -0.1rem;
   bottom: 0.15rem;
@@ -209,13 +180,13 @@ main#main-content .flex.flex-col.items-start.justify-center {
   background: transparent;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.composer-mascot-anchor--busy {
+  animation: composer-mascot-nudge 0.6s ease-in-out infinite;
 }
 .composer-mascot-anchor:active {
   transform: scale(1) !important;
-}
-[data-theme='light'] .composer-mascot-anchor {
-  --composer-mascot-screen-s: rgba(14, 116, 144, 0.2);
-  --composer-mascot-screen-b: rgba(6, 182, 212, 0.38);
 }
 .composer-mascot-anchor:focus-visible {
   border-radius: 0.5rem;
@@ -231,108 +202,19 @@ main#main-content .flex.flex-col.items-start.justify-center {
 [data-theme='dark'] .composer-mascot-svg {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
 }
-
-.composer-mascot-laptop {
-  transform-box: fill-box;
-  transform-origin: 32px 49px;
-  opacity: 0;
-  transform: translate3d(0, 9px, 0) scale(0.5);
-  pointer-events: none;
-}
-.composer-mascot-laptop--on {
-  opacity: 1;
-}
-.composer-mascot-laptop--unfold {
-  animation: composer-mascot-unfold 0.7s cubic-bezier(0.2, 0.9, 0.2, 1) both;
-}
-.composer-mascot-laptop--work {
-  transform: translate3d(0, 0, 0) scale(1);
-  opacity: 1;
-}
-.composer-mascot-laptop--type {
-  animation: composer-mascot-bob 0.55s ease-in-out infinite;
-  animation-delay: 0.05s;
-}
-.composer-mascot-screen {
-  fill: rgba(6, 182, 212, 0.25);
-  transition: fill 0.25s ease, opacity 0.25s ease;
-}
-[data-theme='light'] .composer-mascot-screen {
-  fill: rgba(14, 116, 144, 0.2);
-}
-.composer-mascot-laptop--type .composer-mascot-screen {
-  animation: composer-mascot-laptop-screen-pulse 0.65s ease-in-out infinite;
-}
-
-.composer-mascot-arm {
-  transform-box: fill-box;
-  pointer-events: none;
-  transition: transform 0.35s cubic-bezier(0.2, 0.85, 0.2, 1);
-}
-.composer-mascot-arm--left {
-  transform-origin: 21px 30px;
-}
-.composer-mascot-arm--right {
-  transform-origin: 44px 30px;
-}
-.composer-mascot-arm--left.composer-mascot-arm--reach {
-  transform: rotate(14deg) translate(0.1rem, 0.05rem);
-}
-.composer-mascot-arm--right.composer-mascot-arm--reach {
-  transform: rotate(-14deg) translate(-0.1rem, 0.05rem);
-}
-.composer-mascot-arm--left.composer-mascot-arm--type {
-  animation: composer-mascot-fingers 0.4s ease-in-out infinite;
-}
-
-@keyframes composer-mascot-unfold {
-  0% {
-    transform: translate3d(0, 10px, 0) scale(0.45) rotateZ(-1deg);
-    opacity: 0.65;
-  }
-  100% {
-    transform: translate3d(0, 0, 0) scale(1) rotateZ(0);
-    opacity: 1;
-  }
-}
-@keyframes composer-mascot-bob {
+@keyframes composer-mascot-nudge {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(1) rotateZ(0);
+    transform: translate3d(0, 0, 0) rotate(0);
   }
   50% {
-    transform: translate3d(0, 1.5px, 0) scale(1.01) rotateZ(0.4deg);
+    transform: translate3d(0, -1px, 0) rotate(-1.5deg);
   }
 }
-@keyframes composer-mascot-laptop-screen-pulse {
-  0%,
-  100% {
-    fill: var(--composer-mascot-screen-s);
-  }
-  50% {
-    fill: var(--composer-mascot-screen-b);
-  }
-}
-@keyframes composer-mascot-fingers {
-  0%,
-  100% {
-    transform: rotate(14deg) translate(0.1rem, 0.05rem) translate3d(0, 0, 0);
-  }
-  50% {
-    transform: rotate(14deg) translate(0.1rem, 0.05rem) translate3d(0, 0.14rem, 0);
-  }
-}
-.composer-mascot-arm--right.composer-mascot-arm--type {
-  animation: composer-mascot-fingers-r 0.4s ease-in-out infinite;
-  animation-delay: 0.1s;
-}
-@keyframes composer-mascot-fingers-r {
-  0%,
-  100% {
-    transform: rotate(-14deg) translate(-0.1rem, 0.05rem) translate3d(0, 0, 0);
-  }
-  50% {
-    transform: rotate(-14deg) translate(-0.1rem, 0.05rem) translate3d(0, 0.12rem, 0);
+@media (prefers-reduced-motion: reduce) {
+  .composer-mascot-anchor--busy {
+    animation: none;
+    opacity: 0.9;
   }
 }
 
