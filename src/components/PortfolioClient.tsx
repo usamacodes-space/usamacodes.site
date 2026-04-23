@@ -12,6 +12,7 @@ import { useMinWidth } from '../hooks/useMinWidth';
 import { useOnline } from '../hooks/useOnline';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { queryPortfolio } from '../services/chat';
+import { AskComposerMascot } from './AskComposerMascot';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
 import { ClaudeMascot } from './ClaudeMascot';
 import { Header } from './Header';
@@ -102,6 +103,7 @@ export default function PortfolioClient() {
   const mainRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
   const lenisRef = useLenis(scrollRef);
 
   useEffect(() => {
@@ -461,9 +463,15 @@ export default function PortfolioClient() {
               backgroundColor: 'transparent',
             }}
           >
-            <div className="max-w-xl mx-auto">
+            <div className="max-w-xl mx-auto relative">
+              <AskComposerMascot
+                isDark={isDark}
+                isAiBusy={isTyping}
+                reducedMotion={reducedMotion}
+                onRequestFocusInput={() => { chatInputRef.current?.focus({ preventScroll: true }); }}
+              />
               <div
-                className="chat-input-wrap rounded-2xl flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 transition-all"
+                className="chat-input-wrap relative z-[1] rounded-2xl flex items-center gap-2 pl-10 pr-3 py-2 sm:pl-12 sm:pr-4 sm:py-2.5 transition-all"
                 style={{
                   border: '1px solid var(--input-well-border)',
                   backgroundColor: 'var(--input-well-bg)',
@@ -473,6 +481,7 @@ export default function PortfolioClient() {
               >
                 <ClaudeMascot isTyping={isTyping} size={26} reducedMotion={reducedMotion} />
                 <input
+                  ref={chatInputRef}
                   placeholder="Ask anything… (Enter)"
                   className="flex-1 min-w-0 bg-transparent border-0 outline-none px-1 py-2 text-sm"
                   style={{ color: 'var(--brand-light)' }}

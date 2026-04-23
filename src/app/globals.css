@@ -194,6 +194,148 @@ main#main-content .flex.flex-col.items-start.justify-center {
   }
 }
 
+/* Ask-bar corner mascot: Claude Code–style peering assistant + laptop */
+.composer-mascot-anchor {
+  --composer-mascot-screen-s: rgba(6, 182, 212, 0.22);
+  --composer-mascot-screen-b: rgba(6, 182, 212, 0.48);
+  position: absolute;
+  left: -0.1rem;
+  bottom: 0.15rem;
+  z-index: 2;
+  width: 3.4rem;
+  height: 3.4rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.composer-mascot-anchor:active {
+  transform: scale(1) !important;
+}
+[data-theme='light'] .composer-mascot-anchor {
+  --composer-mascot-screen-s: rgba(14, 116, 144, 0.2);
+  --composer-mascot-screen-b: rgba(6, 182, 212, 0.38);
+}
+.composer-mascot-anchor:focus-visible {
+  border-radius: 0.5rem;
+  outline: 2px solid rgba(249, 115, 22, 0.55);
+  outline-offset: 2px;
+}
+.composer-mascot-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
+}
+[data-theme='dark'] .composer-mascot-svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+}
+
+.composer-mascot-laptop {
+  transform-box: fill-box;
+  transform-origin: 32px 49px;
+  opacity: 0;
+  transform: translate3d(0, 9px, 0) scale(0.5);
+  pointer-events: none;
+}
+.composer-mascot-laptop--on {
+  opacity: 1;
+}
+.composer-mascot-laptop--unfold {
+  animation: composer-mascot-unfold 0.7s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+.composer-mascot-laptop--work {
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+}
+.composer-mascot-laptop--type {
+  animation: composer-mascot-bob 0.55s ease-in-out infinite;
+  animation-delay: 0.05s;
+}
+.composer-mascot-screen {
+  fill: rgba(6, 182, 212, 0.25);
+  transition: fill 0.25s ease, opacity 0.25s ease;
+}
+[data-theme='light'] .composer-mascot-screen {
+  fill: rgba(14, 116, 144, 0.2);
+}
+.composer-mascot-laptop--type .composer-mascot-screen {
+  animation: composer-mascot-laptop-screen-pulse 0.65s ease-in-out infinite;
+}
+
+.composer-mascot-arm {
+  transform-box: fill-box;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.2, 0.85, 0.2, 1);
+}
+.composer-mascot-arm--left {
+  transform-origin: 21px 30px;
+}
+.composer-mascot-arm--right {
+  transform-origin: 44px 30px;
+}
+.composer-mascot-arm--left.composer-mascot-arm--reach {
+  transform: rotate(14deg) translate(0.1rem, 0.05rem);
+}
+.composer-mascot-arm--right.composer-mascot-arm--reach {
+  transform: rotate(-14deg) translate(-0.1rem, 0.05rem);
+}
+.composer-mascot-arm--left.composer-mascot-arm--type {
+  animation: composer-mascot-fingers 0.4s ease-in-out infinite;
+}
+
+@keyframes composer-mascot-unfold {
+  0% {
+    transform: translate3d(0, 10px, 0) scale(0.45) rotateZ(-1deg);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1) rotateZ(0);
+    opacity: 1;
+  }
+}
+@keyframes composer-mascot-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1) rotateZ(0);
+  }
+  50% {
+    transform: translate3d(0, 1.5px, 0) scale(1.01) rotateZ(0.4deg);
+  }
+}
+@keyframes composer-mascot-laptop-screen-pulse {
+  0%,
+  100% {
+    fill: var(--composer-mascot-screen-s);
+  }
+  50% {
+    fill: var(--composer-mascot-screen-b);
+  }
+}
+@keyframes composer-mascot-fingers {
+  0%,
+  100% {
+    transform: rotate(14deg) translate(0.1rem, 0.05rem) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotate(14deg) translate(0.1rem, 0.05rem) translate3d(0, 0.14rem, 0);
+  }
+}
+.composer-mascot-arm--right.composer-mascot-arm--type {
+  animation: composer-mascot-fingers-r 0.4s ease-in-out infinite;
+  animation-delay: 0.1s;
+}
+@keyframes composer-mascot-fingers-r {
+  0%,
+  100% {
+    transform: rotate(-14deg) translate(-0.1rem, 0.05rem) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotate(-14deg) translate(-0.1rem, 0.05rem) translate3d(0, 0.12rem, 0);
+  }
+}
+
 input, textarea, button { transition: all 0.2s ease; }
 input:focus, textarea:focus, button:focus-visible { outline: none; }
 input:focus, textarea:focus { box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4); border-radius: inherit; }
