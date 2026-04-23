@@ -13,6 +13,7 @@ import { useOnline } from '../hooks/useOnline';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { queryPortfolio } from '../services/chat';
 import { ChatErrorBoundary } from './ChatErrorBoundary';
+import { ClaudeMascot } from './ClaudeMascot';
 import { Header } from './Header';
 import { StartTabPlaceholder } from './StartTabPlaceholder';
 import EducationPanel from './portfolio-tabs/EducationPanel';
@@ -470,6 +471,7 @@ export default function PortfolioClient() {
                   boxShadow: isDark ? 'none' : '0 1px 3px rgba(15, 23, 42, 0.06)',
                 }}
               >
+                <ClaudeMascot isTyping={isTyping} size={26} reducedMotion={reducedMotion} />
                 <input
                   placeholder="Ask anything… (Enter)"
                   className="flex-1 min-w-0 bg-transparent border-0 outline-none px-1 py-2 text-sm"
