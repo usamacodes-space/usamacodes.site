@@ -31,6 +31,16 @@ export const FUN_BUILDS: FunBuild[] = [
     emoji: "✨",
     status: "live",
   },
+  {
+    id: 'fun-builds:cursor-bot',
+    title: "Cursor remote bridge",
+    description:
+      "Telegram or local HTTP → Cursor CLI `agent` (headless). Setup, env vars, and troubleshooting are in the README.",
+    url: "https://github.com/usamacodes-space/cursor-bot/blob/main/README.md",
+    githubUrl: "https://github.com/usamacodes-space/cursor-bot",
+    emoji: "📱",
+    status: "live",
+  },
 ];
 
 export const EXPERIENCE: ExpType[] = [
@@ -239,7 +249,10 @@ export function getPortfolioContextForAI(): string {
   const faqBlock = FAQ_ITEMS.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n");
   const funBlock =
     FUN_BUILDS.length > 0
-      ? `\n\n=== PROJECTS FOR FUN (live demos) ===\n${FUN_BUILDS.map((b) => `${b.title} (${b.status ?? "live"}): ${b.description} — ${b.url}`).join("\n")}`
+      ? `\n\n=== PROJECTS FOR FUN (live demos) ===\n${FUN_BUILDS.map((b) => {
+          const gh = b.githubUrl ? ` — GitHub: ${b.githubUrl}` : "";
+          return `${b.title} (${b.status ?? "live"}): ${b.description} — ${b.url}${gh}`;
+        }).join("\n")}`
       : "";
   return `${RESUME_CONTENT.trim()}
 

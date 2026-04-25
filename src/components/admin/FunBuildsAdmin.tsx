@@ -23,6 +23,7 @@ const seed: FunBuildDraft = {
   title: '',
   description: '',
   url: '',
+  githubUrl: '',
   emoji: '✨',
   status: 'live',
   imageUrl: '',
@@ -69,6 +70,7 @@ export default function FunBuildsAdmin() {
       title: b.title,
       description: b.description,
       url: b.url,
+      githubUrl: b.githubUrl ?? '',
       emoji: b.emoji ?? '🧪',
       status: b.status ?? 'idea',
       imageUrl: b.imageUrl ?? '',
@@ -108,10 +110,13 @@ export default function FunBuildsAdmin() {
     const title = draft.title.trim();
     const description = draft.description.trim();
     const url = draft.url.trim();
+    const githubUrl = draft.githubUrl?.trim() ?? '';
 
     if (!title) return setLoadError('Title is required.');
     if (!description) return setLoadError('Description is required.');
     if (!isValidAbsoluteHttpUrl(url)) return setLoadError('URL must start with http:// or https://');
+    if (githubUrl && !isValidAbsoluteHttpUrl(githubUrl))
+      return setLoadError('GitHub URL must start with http:// or https:// when set.');
 
     setLoadError(null);
     setSaving(true);
@@ -121,6 +126,7 @@ export default function FunBuildsAdmin() {
       title,
       description,
       url,
+      githubUrl: githubUrl || undefined,
       emoji: typeof draft.emoji === 'string' ? draft.emoji : undefined,
       status: draft.status,
       imageUrl: draft.imageUrl ? draft.imageUrl.trim() : undefined,
@@ -264,6 +270,11 @@ export default function FunBuildsAdmin() {
                           <div className="text-xs mt-1 opacity-80 truncate" style={{ color: 'var(--brand-slate-light)' }}>
                             {b.url}
                           </div>
+                          {b.githubUrl ? (
+                            <div className="text-[11px] mt-0.5 opacity-80 truncate font-mono" style={{ color: 'var(--brand-slate-light)' }}>
+                              gh: {b.githubUrl}
+                            </div>
+                          ) : null}
                           <div className="text-[11px] mt-2" style={{ color: 'var(--brand-slate-light)' }}>
                             <span className="font-mono opacity-90">id:</span> {b.id ?? '—'}
                           </div>
@@ -405,6 +416,19 @@ export default function FunBuildsAdmin() {
                     value={draft.url}
                     onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
                     placeholder="https://your-app.vercel.app"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium" style={{ color: 'var(--brand-slate-light)' }}>
+                    GitHub URL (optional — shows repo icon on the public list)
+                  </label>
+                  <input
+                    className="mt-1 w-full rounded-xl px-3 py-2 outline-none"
+                    style={{ border: '1px solid rgba(93,112,127,0.22)', backgroundColor: 'rgba(255,255,255,0.85)', color: 'var(--brand-light)' }}
+                    value={draft.githubUrl ?? ''}
+                    onChange={(e) => setDraft((d) => ({ ...d, githubUrl: e.target.value }))}
+                    placeholder="https://github.com/you/your-repo"
                   />
                 </div>
 

@@ -26,6 +26,9 @@ export async function PUT(req: NextRequest, context: any) {
   if (!body.description || typeof body.description !== 'string')
     return NextResponse.json({ error: 'description is required' }, { status: 400 });
   if (!isValidAbsoluteHttpUrl(body.url)) return NextResponse.json({ error: 'url must be an absolute https/http link' }, { status: 400 });
+  if (body.githubUrl != null && body.githubUrl !== '' && !isValidAbsoluteHttpUrl(body.githubUrl)) {
+    return NextResponse.json({ error: 'githubUrl must be an absolute https/http link when set' }, { status: 400 });
+  }
 
   const now = new Date().toISOString();
   const builds = await getFunBuilds();
@@ -37,6 +40,8 @@ export async function PUT(req: NextRequest, context: any) {
     title: body.title.trim(),
     description: body.description.trim(),
     url: body.url.trim(),
+    githubUrl:
+      typeof body.githubUrl === 'string' && body.githubUrl.trim() ? body.githubUrl.trim() : undefined,
     emoji: typeof body.emoji === 'string' ? body.emoji : undefined,
     status: body.status,
     imageUrl: typeof body.imageUrl === 'string' ? body.imageUrl : undefined,

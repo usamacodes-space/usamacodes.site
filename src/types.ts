@@ -29,6 +29,8 @@ export interface FunBuild {
   title: string;
   description: string;
   url: string;
+  /** Optional second link (e.g. GitHub repo or tree when `url` points at a README). */
+  githubUrl?: string;
   /** Optional thumbnail/screenshot URL shown in the public list. */
   imageUrl?: string;
   /** Shown in the tile — emoji or a single character */
