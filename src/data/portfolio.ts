@@ -41,6 +41,16 @@ export const FUN_BUILDS: FunBuild[] = [
     emoji: "📱",
     status: "live",
   },
+  {
+    id: 'fun-builds:forganizer',
+    title: "Forganizer",
+    description:
+      "Local-first desktop organizer built with Electron. Scans messy folders, previews safe move/copy operations, auto-categorizes files, and includes semantic search.",
+    url: "https://github.com/usamacodes-space/Forganizer",
+    githubUrl: "https://github.com/usamacodes-space/Forganizer",
+    emoji: "🗂️",
+    status: "live",
+  },
 ];
 
 export const EXPERIENCE: ExpType[] = [
