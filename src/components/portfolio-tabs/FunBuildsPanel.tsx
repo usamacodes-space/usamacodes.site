@@ -49,9 +49,6 @@ export default function FunBuildsPanel() {
             : 'linear-gradient(135deg, rgba(255,255,255,0.92), rgba(248,250,252,0.72))',
         }}
       >
-        <p className="text-[11px] uppercase tracking-[0.18em] font-semibold mb-2" style={{ color: 'var(--brand-slate-light)' }}>
-          Indie builds
-        </p>
         <h2 className="text-xl sm:text-2xl font-semibold leading-tight mb-1" style={{ color: 'var(--brand-light)' }}>
           Projects for fun
         </h2>
@@ -92,7 +89,7 @@ export default function FunBuildsPanel() {
         {builds.map((build, i) => (
           <li key={build.id ?? `${build.url}-${build.title}-${i}`} className="bento-animate">
             <div
-              className="flex items-stretch gap-1 sm:gap-2 rounded-2xl transition-all duration-200 hover:-translate-y-[1px]"
+              className="group flex items-stretch gap-1 sm:gap-2 rounded-2xl transition-all duration-200 hover:-translate-y-[2px] hover:scale-[1.01] active:scale-[0.995]"
               style={{
                 border: `1px solid ${isDark ? 'rgba(93,112,127,0.26)' : 'rgba(93,112,127,0.16)'}`,
                 backgroundColor: isDark ? 'rgba(22,27,34,0.56)' : 'rgba(255,255,255,0.82)',
@@ -103,7 +100,7 @@ export default function FunBuildsPanel() {
                 href={build.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-1 min-w-0 items-stretch gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f97316]/55 focus-visible:ring-inset"
+                className="flex flex-1 min-w-0 items-stretch gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f97316]/55 focus-visible:ring-inset"
                 aria-label={`${build.title} — opens primary link in a new tab`}
               >
                 <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-xl sm:text-2xl select-none" aria-hidden>
@@ -111,7 +108,7 @@ export default function FunBuildsPanel() {
                     <img
                       src={build.imageUrl}
                       alt=""
-                      className="w-full h-full object-cover rounded-xl"
+                      className="w-full h-full object-cover rounded-xl transition-transform duration-200 group-hover:scale-105"
                       loading="lazy"
                     />
                   ) : (
@@ -122,7 +119,7 @@ export default function FunBuildsPanel() {
                         border: `1px solid ${isDark ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.15)'}`,
                       }}
                     >
-                      {build.emoji ?? '🧪'}
+                      <span className="transition-transform duration-200 group-hover:scale-110">{build.emoji ?? '🧪'}</span>
                     </span>
                   )}
                 </div>
@@ -153,7 +150,7 @@ export default function FunBuildsPanel() {
                     style={{ color: 'var(--brand-slate-light)' }}
                     aria-hidden
                   >
-                    <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:text-[#f97316]" />
+                    <ExternalLink className="w-4 h-4 opacity-70 transition-all duration-200 group-hover:opacity-100 group-hover:text-[#f97316] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
                 </div>
               </a>
